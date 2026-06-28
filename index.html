@@ -565,8 +565,9 @@ const DATA = [
   id:"landing", name:"The Landing (by Sentral)", hood:"Dogpatch", address:"1395 22nd St, 94107",
   lat:37.7572, lng:-122.3912, year:"~2016", modern:"yes (luxury)", avail:"yes",
   rentBand:"2BR ~$5,478–6,900 (range to ~$8,061)", each:"~$3,100 ea", caltrain:"22nd St ~3–4 min walk ★★★★", parking:"~$400/mo garage",
-  verdict:"Luxury tower right at the station — SMEG kitchens, rooftop park. 2BRs from ~$5,478 (B11 905sf $6,600; B19 1,090sf ~$6,725). Recently rebranded 'by Sentral'; ~7 units live.",
+  verdict:"⚠️ Over budget — live phone quote (Jun 2026): unit 859 avail Jul 27, 14-mo lease, $7,636/mo. Luxury tower at the station (SMEG, rooftop park), but the EliseAI bot quotes well above your $4–6k ceiling. Cheaper 'from' rates (~$5,478) are smaller/teaser units.",
   units:[
+   {u:"#859 (LIVE QUOTE)",bb:"2/2",sf:"—",rent:"$7,636 (14-mo)",av:"avail Jul 27 ✓",link:"https://sightmap.com/share/e8ywkly2vlx?unit_id=651720"},
    {u:"B11",bb:"2/2",sf:"905",rent:"~$6,600",av:"call to confirm Aug window",link:"https://www.rent.com/apartment/the-landing-san-francisco-ca-lc5894727"},
    {u:"B19",bb:"2/2",sf:"1,090–1,095",rent:"~$6,725–6,900",av:"call to confirm",link:"https://www.apartments.com/the-landing-san-francisco-ca/3gg6h5e/"},
    {u:"2BR (from)",bb:"2/2",sf:"~900+",rent:"from ~$5,478",av:"~7 units live",link:"https://www.rentcafe.com/apartments/ca/san-francisco/the-landing-8/default.aspx"}
@@ -664,6 +665,348 @@ const DATA = [
   amenities:{coffee:["Farley's","Design District cafés"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (16th St)"],transit:["22nd St Caltrain (walk/bus)","22/55 bus","I-280 nearby"],gym:"Fitness center, sky lounge w/ demo kitchen, rooftop terrace, co-working"},
   reviews:[{src:"Yelp (23 reviews)",rating:"—",quote:"Design + amenities praised (Marmol Radziner); newest building in the area.",url:"https://www.yelp.com/biz/mason-on-mariposa-san-francisco"}],
   complaints:["Caltrain is a 12–15 min walk / bus","2BRs mid-to-upper pricing","Slight Potrero grade walking home"]
+ },
+ {
+  id:"gantry", name:"The Gantry", hood:"Dogpatch", address:"2121 3rd St, 94107",
+  lat:37.7598, lng:-122.3885, year:"2017 (Mill Creek)", modern:"yes", avail:"yes",
+  rentBand:"2BR ~$5,143–6,216 (1BR from ~$4,200)", each:"~$2,840 ea", caltrain:"22nd St ~5–7 min walk / T-Third at door ★★★", parking:"garage (ask; ~$250–350)",
+  verdict:"Big amenity-rich Mill Creek community with the T-Third stop essentially at the door. Mid-pack 2BR pricing; reviews flag soundproofing + nearby construction — get an east/courtyard unit.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~800–921",rent:"~$5,143–6,216",av:"~6 units live — confirm Aug",link:"https://www.apartments.com/the-gantry-san-francisco-ca/15nhmn4/"},
+   {u:"1BR (cheaper)",bb:"1/1",sf:"~598–750",rent:"from ~$4,200",av:"live",link:"https://thegantryapts.com/"}
+  ],
+  contact:{phone:"via site",email:"—",site:"https://thegantryapts.com/",apply:"https://thegantryapts.com/"},
+  externalities:[
+   {f:"T-Third light rail",s:"high",n:"tracks on 3rd St out front — bells/rumble on west/3rd-facing units"},
+   {f:"Construction noise",s:"med",n:"residents report frequent nearby drilling (Pier 70 / Mission Bay buildout)"},
+   {f:"Interior / impact noise",s:"med",n:"reviews cite upstairs impact + thin floor isolation — vet the unit"},
+   {f:"Chase Center event nights",s:"med",n:"~0.7 mi N; game/concert traffic"},
+   {f:"Car break-ins",s:"med",n:"use the garage"}
+  ],
+  facing:{best:"East / courtyard — away from the T-Third on 3rd St (W)",sides:[
+   {dir:"W / 3rd St",what:"T-Third light rail + traffic: the loud side",s:"high"},
+   {dir:"E / courtyard",what:"Interior courtyard / bay glimpses on higher floors — quietest",s:"low"},
+   {dir:"N / S",what:"Side streets — calm",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5–7 min, or T-Third at the door",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5–7 min",cost:"free",freq:"—",route:"3rd St → 22nd St to the platform",notes:"Quick flat walk."},
+    {mode:"🚊 T-Third (at door)",time:"~3 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"20th/Mariposa stop out front → 4th & King",notes:"Stop ~0.1 mi — one-seat to 4th & King for express trains."}
+   ],
+   rushTip:"Walk ~6 min to 22nd St, or grab the T at the door. ~58 min to the office."},
+  sound:"2017 Mill Creek build, ~232 units, concrete. West/3rd-St units get the T-Third; reviews note impact noise between floors — request east/courtyard.",
+  amenities:{coffee:["Dogpatch cafés on 3rd","The Daily Driver"],grocery:["Safeway (Mission Bay ~1 mi)","Whole Foods (17th)"],transit:["22nd St Caltrain (~5–7 min)","T-Third at door","I-280 nearby"],gym:"Gym, rooftop deck, courtyard, clubhouse, coffee bar, dog park, bike storage"},
+  reviews:[{src:"Yelp / ApartmentRatings",rating:"mixed (lean +)",quote:"Staff + cleanliness + waterfront views praised; complaints on noise + small gym.",url:"https://www.apartmentratings.com/ca/san-francisco/the-gantry_9199332346275151866/"}],
+  complaints:["T-Third + construction noise on west units","Soundproofing/impact noise between floors","Small gym"]
+ },
+ {
+  id:"950tenn", name:"950 Tennessee", hood:"Dogpatch", address:"950 Tennessee St, 94107",
+  lat:37.7588, lng:-122.3900, year:"2020 (Handel)", modern:"yes (luxury condo)", avail:"warn",
+  rentBand:"2BR ~$4,700–5,200 (studio from ~$2,700)", each:"~$2,475 ea", caltrain:"22nd St ~5 min walk / T-Third ★★★", parking:"reserved garage (per-unit; often included)",
+  verdict:"2020 condo block rented owner-by-owner — often the cheapest modern 2BR near the station (~$4,700). Quality varies by owner; rooftop + dog spa + Esprit Park next door.",
+  units:[
+   {u:"#214",bb:"2/2",sf:"floor-to-ceiling glass",rent:"~$4,700",av:"owner-listed — monitor",link:"https://www.apartments.com/950-tennessee-st-san-francisco-ca/wkd2hxh/"},
+   {u:"Studio / 1BR (cheaper)",bb:"0–1/1",sf:"varies",rent:"~$2,700–4,600",av:"owner-listed",link:"https://rent950tennessee.com/"}
+  ],
+  contact:{phone:"via listings / ReLISTO",email:"—",site:"https://rent950tennessee.com/",apply:"https://www.apartments.com/950-tennessee-st-san-francisco-ca/wkd2hxh/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"a few blocks W; west units catch freeway hum"},
+   {f:"Caltrain/freight horns",s:"med",n:"rail corridor to the W; horns audible"},
+   {f:"T-Third (3rd St)",s:"low",n:"~1 blk E"},
+   {f:"Flood / liquefaction (long-term)",s:"med",n:"Dogpatch bay fill"}
+  ],
+  facing:{best:"East / courtyard-garden — away from I-280 + tracks (W)",sides:[
+   {dir:"W",what:"I-280 + Caltrain corridor: the loud side",s:"med"},
+   {dir:"E / courtyard",what:"Mid-block garden walk / Esprit Park side — quietest",s:"low"},
+   {dir:"S",what:"Historic district / industrial — calm at night",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5 min, or T-Third 1 block over",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~53–63 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"Tennessee St → 22nd St to the platform",notes:"Quick flat walk."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express",notes:"One block east to the line."}
+   ],
+   rushTip:"~5-min walk to 22nd St. Often the cheapest modern 2BR here, but confirm parking + management per unit. ~56 min to the office."},
+  sound:"2020 Handel Architects condo (100 units), concrete/steel — generally solid. Rented owner-by-owner, so finish + management vary. West units catch I-280/Caltrain; prefer east/garden.",
+  amenities:{coffee:["Dogpatch cafés","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5 min)","T-Third (3rd St)","Esprit Park adjacent"],gym:"Rooftop deck w/ BBQ + firepits, courtyard, dog spa, bike room"},
+  reviews:[{src:"—",rating:"—",quote:"Condo building — no consolidated rating; owner-listing quality varies.",url:"https://www.apartments.com/950-tennessee-st-san-francisco-ca/wkd2hxh/"}],
+  complaints:["Owner-by-owner inconsistency","I-280/Caltrain noise on west units","Parking varies per unit"]
+ },
+ {
+  id:"815tenn", name:"815 Tennessee", hood:"Dogpatch", address:"815 Tennessee St, 94107",
+  lat:37.7602, lng:-122.3898, year:"2018 (BDE)", modern:"yes (condo)", avail:"warn",
+  rentBand:"2BR ~$4,600–4,800 (cheapest modern 2BR tier)", each:"~$2,350 ea", caltrain:"22nd St ~5 min walk / T-Third ★★★", parking:"1-car garage (fee; some incl)",
+  verdict:"2018 condo rented unit-by-unit — among the cheapest modern 2BRs near the station (~$4,600, e.g. #211 885sf). Availability is sporadic (set alerts); landscaped courtyard + roof terrace.",
+  units:[
+   {u:"#211",bb:"2/2",sf:"885",rent:"~$4,600",av:"owner-listed — monitor",link:"https://www.apartments.com/815-tennessee-st-san-francisco-ca/he64ks0/"},
+   {u:"2BR (other)",bb:"2/2",sf:"~851",rent:"from ~$4,800",av:"sporadic",link:"https://www.zillow.com/b/815-tennessee-st-san-francisco-ca-9NK7tz/"}
+  ],
+  contact:{phone:"via RentSFNow / ReLISTO",email:"—",site:"https://www.apartments.com/815-tennessee-st-san-francisco-ca/he64ks0/",apply:"https://www.apartments.com/815-tennessee-st-san-francisco-ca/he64ks0/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"a few blocks W"},
+   {f:"Caltrain/freight horns",s:"med",n:"rail corridor to the W"},
+   {f:"T-Third (3rd St)",s:"low",n:"~1 blk E"},
+   {f:"Flood / liquefaction (long-term)",s:"med",n:"Dogpatch bay fill"}
+  ],
+  facing:{best:"Courtyard / east — away from I-280 + tracks (W)",sides:[
+   {dir:"W",what:"I-280 + Caltrain corridor: the loud side",s:"med"},
+   {dir:"Courtyard / E",what:"Interior landscaped courtyard — quietest",s:"low"},
+   {dir:"N / S",what:"Side streets — calm",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5 min, or T-Third 1 block over",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~53–63 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"Tennessee St → 22nd St to the platform",notes:"Quick flat walk."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express",notes:"One block east to the line."}
+   ],
+   rushTip:"~5-min walk to 22nd St. Cheapest modern 2BR tier, but units pop up sporadically — set Zillow/Zumper alerts. ~56 min to the office."},
+  sound:"2018 BDE Architecture condo (~69 units), Bosch SS, quartz, hardwood. Rented unit-by-unit. West units catch I-280/Caltrain; prefer courtyard.",
+  amenities:{coffee:["Dogpatch cafés","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5 min)","T-Third (3rd St)","Webpass WiFi"],gym:"Landscaped roof terrace w/ BBQ, courtyard, bike storage + repair, car share, package concierge"},
+  reviews:[{src:"—",rating:"—",quote:"Condo building — no consolidated rating.",url:"https://www.zillow.com/b/815-tennessee-st-san-francisco-ca-9NK7tz/"}],
+  complaints:["Sporadic availability (unit-by-unit)","I-280/Caltrain noise on west units","Parking a separate fee on some units"]
+ },
+ {
+  id:"603tenn", name:"603 Tennessee (Chase SF)", hood:"Dogpatch", address:"603 Tennessee St, 94107",
+  lat:37.7619, lng:-122.3896, year:"2022 (Saitowitz)", modern:"yes (luxury townhouse)", avail:"yes",
+  rentBand:"2BR ~$5,400–7,000 (studio ~$2,850)", each:"~$3,100 ea", caltrain:"22nd St ~5 min walk / T-Third ★★★", parking:"garage (17 stalls; ask)",
+  verdict:"Newest design-forward build (2022, AIA-honored Saitowitz) — mostly two-story townhouse 2BRs. Striking but pricey; ⚠️ verify in-unit laundry (one listing flags none).",
+  units:[
+   {u:"#301",bb:"2/2",sf:"1,031",rent:"~$5,895",av:"call to confirm Aug",link:"https://www.apartments.com/603-tennessee-st-san-francisco-ca/p8ez2jr/"},
+   {u:"#502",bb:"2/2.5",sf:"957",rent:"~$7,000",av:"call to confirm",link:"https://www.zumper.com/apartment-buildings/p1064276/chase-sf-dogpatch-san-francisco-ca"}
+  ],
+  contact:{phone:"via listings",email:"—",site:"https://www.zumper.com/apartment-buildings/p1064276/chase-sf-dogpatch-san-francisco-ca",apply:"https://www.apartments.com/603-tennessee-st-san-francisco-ca/p8ez2jr/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"a few blocks W"},
+   {f:"Caltrain/freight horns",s:"med",n:"rail corridor to the W"},
+   {f:"T-Third (3rd St)",s:"low",n:"~1 blk E"},
+   {f:"Chase Center event nights",s:"med",n:"~0.6 mi N"},
+   {f:"No in-unit laundry?",s:"med",n:"one listing flags none — verify directly before signing"}
+  ],
+  facing:{best:"East / upper — away from I-280 + tracks (W)",sides:[
+   {dir:"W",what:"I-280 + Caltrain corridor: the loud side",s:"med"},
+   {dir:"E / upper",what:"Townhouse stacks facing east / higher floors — quieter",s:"low"},
+   {dir:"Street",what:"Townhome fronts on the street — some foot traffic",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5 min, or T-Third 1 block over",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"Tennessee St → 22nd St to the platform",notes:"Quick flat walk."},
+    {mode:"🚊 T-Third",time:"~4 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express",notes:"One block east."}
+   ],
+   rushTip:"~5-min walk to 22nd St. Newest building here, but confirm laundry + parking. ~58 min to the office."},
+  sound:"2022 Saitowitz build, 24 units (mostly stacked townhouses), concrete/perforated metal — too new for a review corpus. Verify laundry. West side faces I-280/Caltrain.",
+  amenities:{coffee:["Dogpatch cafés","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5 min)","T-Third (3rd St)","near UCSF / biotech"],gym:"Ground-floor art studio, 36 bike spaces"},
+  reviews:[{src:"—",rating:"new",quote:"AIA Honor Award (2023) design; no resident reviews yet.",url:"https://www.zumper.com/apartment-buildings/p1064276/chase-sf-dogpatch-san-francisco-ca"}],
+  complaints:["Possible no in-unit laundry (verify)","Pricey for the area","Brand-new — unproven management"]
+ },
+ {
+  id:"mariposatenn", name:"The Mariposa (601 Tennessee)", hood:"Dogpatch", address:"601 Tennessee St, 94107",
+  lat:37.7621, lng:-122.3897, year:"2019", modern:"yes (boutique luxury)", avail:"warn",
+  rentBand:"2BR ~$6,000+ (studio from ~$2,495)", each:"~$3,000 ea", caltrain:"22nd St ~8–10 min walk / T-Third at Mariposa ★★★", parking:"ask leasing",
+  verdict:"Tiny 20-unit boutique with bay-view corner 2BRs (wine fridge, Nest, Latch) — some furnished. Limited inventory; T-Third Mariposa stop ~at the door. Mariposa Park next door.",
+  units:[
+   {u:"2BR/2BA corner",bb:"2/2",sf:"bay-view",rent:"~$6,000+",av:"limited (20 units) — monitor",link:"https://www.apartments.com/the-mariposa-san-francisco-ca/bc8pwr8/"},
+   {u:"Townhome / studio",bb:"0–2/1–2",sf:"varies",rent:"from ~$2,495",av:"limited",link:"https://themariposa.com/"}
+  ],
+  contact:{phone:"via site",email:"—",site:"https://themariposa.com/",apply:"https://themariposa.com/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"a few blocks W"},
+   {f:"Caltrain/freight horns",s:"med",n:"rail corridor to the W"},
+   {f:"T-Third (Mariposa stop)",s:"low",n:"~0.1 mi — convenient but minor noise"},
+   {f:"Mariposa Park",s:"low",n:"green buffer to the N — net positive"}
+  ],
+  facing:{best:"East / north corner — bay + park views, away from I-280 (W)",sides:[
+   {dir:"W",what:"I-280 + Caltrain corridor: the loud side",s:"med"},
+   {dir:"E / N",what:"Bay + Mariposa Park views — quietest, the selling point",s:"low"},
+   {dir:"Street",what:"Townhome fronts — some foot traffic",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~8–10 min, or T-Third at Mariposa",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~58–68 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~8–10 min",cost:"free",freq:"—",route:"Tennessee St S → 22nd St to the platform",notes:"Flat walk south."},
+    {mode:"🚊 T-Third (Mariposa)",time:"~2 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"Mariposa stop → 4th & King or south",notes:"Stop ~0.1 mi from the door."}
+   ],
+   rushTip:"Walk ~9 min to 22nd St, or hop the T at Mariposa. Tiny building — pounce when a 2BR opens. ~62 min to the office."},
+  sound:"2019 boutique build, 5 stories, 20 units (5 townhomes). LG W/D, Nest, Latch. West units catch I-280/Caltrain; corner east/north units have the views.",
+  amenities:{coffee:["Dogpatch cafés","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~8–10 min)","T-Third Mariposa (~0.1 mi)","Mariposa Park"],gym:"6th-floor rooftop deck w/ BBQ + bay views, furnished common areas"},
+  reviews:[{src:"Yelp",rating:"small sample",quote:"Boutique feel + views; limited review history.",url:"https://www.yelp.com/biz/the-mariposa-san-francisco"}],
+  complaints:["Very limited inventory (20 units)","I-280/Caltrain noise on west units","Upper-end pricing; income bar 3× rent"]
+ },
+ {
+  id:"850minn", name:"850 Minnesota (The Esprit)", hood:"Dogpatch", address:"850 Minnesota St, 94107",
+  lat:37.7602, lng:-122.3917, year:"condo", modern:"yes (luxury condo)", avail:"warn",
+  rentBand:"2BR ~$5,500–7,000 (est; 1BR ~$4,850)", each:"~$3,000 ea", caltrain:"22nd St ~5 min walk / T-Third ★★★", parking:"1 garage spot included (many units) + storage",
+  verdict:"Condo building rented owner-by-owner with a rare Dogpatch perk — a pool. Mostly 1BRs surface; 2BRs scarcer (rent unverified). Esprit Park next door, parking often included.",
+  units:[
+   {u:"#155 (1BR)",bb:"1/1.5",sf:"835",rent:"~$4,850–5,850",av:"owner-listed",link:"https://www.apartments.com/850-minnesota-st-san-francisco-ca/2771t1c/"},
+   {u:"2BR (when listed)",bb:"2/2",sf:"~1,000+",rent:"~$5,500–7,000 (verify)",av:"scarce — monitor",link:"https://www.apartmentfinder.com/California/San-Francisco-Apartments/850-Minnesota-St-Apartments-ppmbe2t"}
+  ],
+  contact:{phone:"via listings",email:"—",site:"https://www.apartments.com/850-minnesota-st-san-francisco-ca/2771t1c/",apply:"https://www.apartments.com/850-minnesota-st-san-francisco-ca/2771t1c/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"a few blocks W"},
+   {f:"Caltrain/freight horns",s:"med",n:"rail corridor to the W"},
+   {f:"T-Third (3rd St)",s:"low",n:"~0.2 mi E"},
+   {f:"Flood / liquefaction (long-term)",s:"med",n:"Dogpatch bay fill"}
+  ],
+  facing:{best:"Courtyard — quietest; away from I-280 (W)",sides:[
+   {dir:"W",what:"I-280 + Caltrain corridor: the loud side",s:"med"},
+   {dir:"Courtyard",what:"Interior courtyard (private patios) — quietest",s:"low"},
+   {dir:"E",what:"Esprit Park side — green, calm",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5 min (2 blocks), or T-Third",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~53–63 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"Minnesota St → 22nd St to the platform",notes:"Two blocks, flat."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express",notes:"~0.2 mi to the line."}
+   ],
+   rushTip:"~5-min walk to 22nd St. The pool + included parking are the draw; 2BRs are scarce, so monitor listings. ~56 min to the office."},
+  sound:"Luxury condo (radiant floors, granite/cherry kitchens), rented owner-by-owner. West units catch I-280/Caltrain; courtyard units quietest.",
+  amenities:{coffee:["Dogpatch cafés","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5 min)","T-Third (3rd St)","Esprit Park adjacent"],gym:"Fitness center, pool (rare here), clubhouse, EV charging, elevator"},
+  reviews:[{src:"—",rating:"—",quote:"Condo building — no consolidated rating; quality varies by owner.",url:"https://www.apartments.com/850-minnesota-st-san-francisco-ca/2771t1c/"}],
+  complaints:["2BR rent unverified / scarce","Owner-by-owner inconsistency","I-280/Caltrain noise on west units"]
+ },
+ {
+  id:"grid", name:"The Grid Potrero Hill", hood:"Potrero Hill", address:"1468 25th St, 94107",
+  lat:37.7520, lng:-122.3918, year:"~2006 (loft; Berkshire 2026)", modern:"yes (industrial loft)", avail:"yes",
+  rentBand:"2BR ~$6,800–8,400 (loft premium; 1BR from ~$4,400)", each:"~$3,800 ea", caltrain:"22nd St ~8–10 min walk (downhill) ★★", parking:"on-site garage (ask)",
+  verdict:"Industrial lofts (soaring ceilings, big windows) recently rebranded under Berkshire. Striking but the priciest tier here; sits near the I-280 corridor — get an east/north unit.",
+  units:[
+   {u:"B3L",bb:"2/2",sf:"1,044",rent:"~$6,823–8,434",av:"available now — confirm Aug",link:"https://thegridpotrerohill.com/"},
+   {u:"1BR / studio (cheaper)",bb:"0–1/1",sf:"varies",rent:"from ~$4,400",av:"live",link:"https://www.rentcafe.com/apartments/ca/san-francisco/the-grid-potrero-hill/default.aspx"}
+  ],
+  contact:{phone:"via site",email:"—",site:"https://thegridpotrerohill.com/",apply:"https://thegridpotrerohill.com/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"med",n:"near the 280 corridor on the SE side — west/south units worst"},
+   {f:"Caltrain/freight horns",s:"low",n:"~0.4 mi E"},
+   {f:"Car break-ins",s:"med",n:"use the garage"},
+   {f:"New management (2026)",s:"low",n:"just rebranded under Berkshire — track record TBD"}
+  ],
+  facing:{best:"East / north — away from I-280 (W/S)",sides:[
+   {dir:"W / S",what:"Toward I-280: freeway noise + air — the side to avoid",s:"med"},
+   {dir:"E / N",what:"City / bay views, quieter",s:"low"},
+   {dir:"Interior",what:"Loft cores — quietest",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~8–10 min (downhill to the station)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~60–70 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~8–10 min",cost:"free",freq:"—",route:"25th / Pennsylvania NE down to 22nd St",notes:"Downhill to the station; uphill home."},
+    {mode:"🚌 Muni 48",time:"~8 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"25th / 3rd corridor → 22nd St Caltrain",notes:"Backup in bad weather."}
+   ],
+   rushTip:"~9-min downhill walk to 22nd St (uphill home). Lofts are gorgeous but priciest here — and the I-280 side is loud. ~64 min to the office."},
+  sound:"~2006 building rebranded 'The Grid' (2026, Berkshire), loft conversion w/ soaring ceilings + big windows — verify window seal vs I-280 in person. Part of a 53-unit two-building set w/ 1082 Pennsylvania.",
+  amenities:{coffee:["Dogpatch cafés","Farley's"],grocery:["Whole Foods (Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~8–10 min)","48/55 bus","I-280 on-ramp adjacent"],gym:"24/7 maintenance; loft amenities (confirm gym)"},
+  reviews:[{src:"Berkshire (aggregate)",rating:"4.0/5",quote:"Company-level rating; no building reviews yet post-rebrand.",url:"https://www.rentcafe.com/apartments/ca/san-francisco/the-grid-potrero-hill/default.aspx"}],
+  complaints:["Priciest tier (loft premium)","I-280 noise/air on west/south units","New management — track record TBD"]
+ },
+ {
+  id:"metro", name:"Metro at Showplace Square", hood:"Potrero Hill", address:"68 Division St, 94103 (Design District)",
+  lat:37.7698, lng:-122.4045, year:"2008 (De Anza)", modern:"yes", avail:"yes",
+  rentBand:"2BR ~$5,800 median (1BR from ~$3,280)", each:"~$2,900 ea", caltrain:"4th & King via bus/walk ~0.5 mi ★★ / 22nd St ~0.8 mi", parking:"secure garage (fee; BMR 1 free)",
+  verdict:"2008 De Anza community with a pool, in the flat Design District. Better commute via 4th & King than 22nd St. ⚠️ Division St runs along the Hwy-101 viaduct — avoid north/west units.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~1,420",rent:"~$5,800",av:"regular turnover — confirm Aug",link:"https://www.apartments.com/metro-at-showplace-square-san-francisco-ca/wn2v3wl/"},
+   {u:"BMR units (income-qualified)",bb:"varies",sf:"varies",rent:"below market",av:"via SF DAHLIA portal",link:"https://housing.sfgov.org/"}
+  ],
+  contact:{phone:"(415) 431-7368",email:"—",site:"https://www.deanzaproperties.com/san-francisco/metro-at-showplace-square/",apply:"https://www.deanzaproperties.com/san-francisco/metro-at-showplace-square/"},
+  externalities:[
+   {f:"Hwy-101 noise + air",s:"high",n:"Division St runs under/along the 101 Central Skyway — north/west units worst"},
+   {f:"Design District dead-at-night",s:"med",n:"few people out late"},
+   {f:"Car break-ins",s:"med",n:"garage car theft reported despite CCTV — don't leave valuables"},
+   {f:"Caltrain not adjacent",s:"med",n:"~0.8 mi to 22nd St; commute via 4th & King instead"}
+  ],
+  facing:{best:"Courtyard / south — away from Division & the 101 viaduct (N/W)",sides:[
+   {dir:"N / W",what:"Division St + Hwy-101 viaduct: the loud, dusty side — avoid",s:"high"},
+   {dir:"Courtyard / S",what:"Interior courtyard / south — quietest",s:"low"},
+   {dir:"E",what:"Design District blocks — calm",s:"low"}
+  ]},
+  commute:{station:"4th & King Caltrain",best:"Bus/walk ~0.5 mi to 4th & King (flat)",
+   caltrainLeg:"4th & King → Redwood City: 2 zones, ~33–40 min (express ~30), peak trains every ~15–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~60–72 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~10–12 min",cost:"free",freq:"—",route:"Division → toward 4th & King depot",notes:"Flat Design District walk."},
+    {mode:"🚌 Muni 22 / 19",time:"~8 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 10–20 min",route:"toward 4th & King",notes:"Flat bus hop to the depot."}
+   ],
+   rushTip:"Commute via 4th & King (bus or ~11-min walk), not 22nd St — you get express trains there. ~65 min to the office."},
+  sound:"2008 De Anza build, 148 units, 4 stories — A/C, hardwood, granite, in-unit W/D. North/west faces Division + the 101 viaduct; insist on courtyard/south.",
+  amenities:{coffee:["Design District cafés","Sightglass (SoMa)"],grocery:["Whole Foods (Rhode Island ~0.4 mi)","Trader Joe's (4th St)"],transit:["4th & King (~0.5 mi)","22/19/55 bus","Hwy-101 nearby"],gym:"Gym, pool, landscaped courtyard"},
+  reviews:[{src:"Yelp (31 reviews)",rating:"mixed",quote:"Location + finishes praised; major complaint is garage car theft.",url:"https://www.yelp.com/biz/metro-at-showplace-square-san-francisco"}],
+  complaints:["Hwy-101 noise/air on north/west units","Garage car break-ins reported","Caltrain not walkable (use 4th & King)"]
+ },
+ {
+  id:"thepotrero", name:"The Potrero (451 Kansas)", hood:"Potrero Hill", address:"451 Kansas St, 94107",
+  lat:37.7645, lng:-122.4042, year:"2007", modern:"yes (condo)", avail:"warn",
+  rentBand:"2BR ~$4,275–5,300 (often cheapest modern 2BR; studio ~$2,900)", each:"~$2,400 ea", caltrain:"22nd St ~0.6 mi (uphill home) / bus to 4th&King ★★", parking:"assigned garage w/ EV (usually 1/unit)",
+  verdict:"Condo above Whole Foods (Walk Score 97) rented owner-by-owner — frequently the cheapest modern 2BR (~$4,275). Catch: uphill walk home from the station, and quality varies by owner.",
+  units:[
+   {u:"#376",bb:"2/2",sf:"914–1,077",rent:"~$4,275",av:"owner-listed — monitor",link:"https://www.apartments.com/451-kansas-st-san-francisco-ca-unit-the-potrero/mtt8pnh/"},
+   {u:"2BR (other) / studio",bb:"0–2/1–2",sf:"433–1,077",rent:"~$2,900–5,300",av:"owner-listed",link:"https://www.zillow.com/b/451-kansas-st-san-francisco-ca-Cm45rw/"}
+  ],
+  contact:{phone:"via listings",email:"—",site:"https://www.zillow.com/b/451-kansas-st-san-francisco-ca-Cm45rw/",apply:"https://www.apartments.com/451-kansas-st-san-francisco-ca-unit-the-potrero/mtt8pnh/"},
+  externalities:[
+   {f:"Hwy-101 noise + air",s:"med",n:"Kansas/Vermont side faces toward 101 to the W"},
+   {f:"Car break-ins",s:"med",n:"use the garage"},
+   {f:"Uphill from station",s:"med",n:"sits above De Haro/Kansas — return walk is uphill"},
+   {f:"Owner-by-owner variability",s:"low",n:"each unit's quality depends on the owner"}
+  ],
+  facing:{best:"East / courtyard — city views, away from Hwy-101 (W)",sides:[
+   {dir:"W",what:"Toward Hwy-101: freeway noise on west units",s:"med"},
+   {dir:"E / courtyard",what:"City views / interior courtyard — quieter",s:"low"},
+   {dir:"S / N",what:"Potrero blocks — calm",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"~0.6 mi walk (uphill home), or 22/19 bus to 4th & King",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~65–78 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~13–16 min",cost:"free",freq:"—",route:"Kansas → 18th → toward 22nd St",notes:"Downhill there, uphill home (Potrero grade)."},
+    {mode:"🚌 Muni 22 / 19",time:"~8 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 10–20 min",route:"toward 4th & King",notes:"Flatter option to the depot."}
+   ],
+   rushTip:"Cheapest modern 2BR in the set, but it's an uphill walk home from 22nd St — the bus to 4th & King is the comfortable play. ~70 min to the office."},
+  sound:"2007 condo (165 units), hardwood, full-height windows, in-unit W/D, split floorplans. Rented owner-by-owner. West units face Hwy-101; prefer east/courtyard.",
+  amenities:{coffee:["Farley's","Design District cafés"],grocery:["Whole Foods (downstairs!)","Safeway (16th St)"],transit:["22nd St Caltrain (~0.6 mi)","22/19 bus to 4th & King","Hwy-101 nearby"],gym:"Gym, roof deck w/ skyline views, landscaped courtyard"},
+  reviews:[{src:"Yelp (10 reviews)",rating:"mixed",quote:"Whole Foods downstairs + views; condo-rental quality varies by owner.",url:"https://www.yelp.com/biz/the-potrero-san-francisco"}],
+  complaints:["Uphill walk home from the station","Owner-by-owner inconsistency","Hwy-101 noise on west units"]
+ },
+ {
+  id:"maxwell", name:"The Sophie Maxwell (income-restricted)", hood:"Dogpatch", address:"1212 Maryland St, 94107",
+  lat:37.7575, lng:-122.3862, year:"2025 (Power Station)", modern:"yes (new)", avail:"warn",
+  rentBand:"⚠️ income-restricted (50–110% AMI): studio–2BR $2,183–3,858", each:"~$1,930 ea", caltrain:"22nd St ~5–8 min walk ★★★", parking:"available (ask)",
+  verdict:"Brand-new (2025) and by far the cheapest 2BR (~$3,858) — BUT income-restricted affordable housing: you must qualify (≤110% AMI) and apply via the lottery/waitlist. Inside an active construction megaproject.",
+  units:[
+   {u:"2BR (110% AMI tier)",bb:"2/2",sf:"varies",rent:"up to ~$3,858",av:"waitlist reopened Apr 2026 — apply via DAHLIA",link:"https://liveatmaxwell.com/"},
+   {u:"Studio / 1BR",bb:"0–1/1",sf:"varies",rent:"~$2,183+",av:"waitlist",link:"https://housing.sfgov.org/"}
+  ],
+  contact:{phone:"via property / DAHLIA",email:"—",site:"https://liveatmaxwell.com/",apply:"https://housing.sfgov.org/"},
+  externalities:[
+   {f:"Active construction (Power Station)",s:"high",n:"multi-phase megaproject around it (Block 2 excavation 2026) — years of noise/dust"},
+   {f:"Waterfront flood + liquefaction",s:"med",n:"former power-plant bay-edge site"},
+   {f:"Caltrain/freight",s:"med",n:"rail corridor nearby"},
+   {f:"Chase Center event nights",s:"med",n:"~0.5 mi N"}
+  ],
+  facing:{best:"East (bay views); but construction is site-wide for now",sides:[
+   {dir:"E",what:"Waterfront / Bay views — best outlook",s:"low"},
+   {dir:"Site-wide",what:"Active Power Station construction on all sides for years",s:"high"},
+   {dir:"Interior",what:"Quieter from the street, not from the megaproject",s:"med"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5–8 min (Power Station borders 22nd St)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5–8 min",cost:"free",freq:"—",route:"Maryland / Illinois → 22nd St to the platform",notes:"Close, flat."},
+    {mode:"🚊 T-Third",time:"~6 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express",notes:"~2 blocks W to the line."}
+   ],
+   rushTip:"Cheapest option by far IF you income-qualify (≤110% AMI) and clear the waitlist. Apply via DAHLIA. ~60 min to the office once you're in."},
+  sound:"2025 LMS Architects build (105 units), corten-steel 8-story. New = solid, but it sits inside an active multi-year construction site. Income-restricted (not rent-controlled). Utilities extra.",
+  amenities:{coffee:["Dogpatch cafés (short walk)","The Daily Driver"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5–8 min)","T-Third (3rd St)","new Power Station Park ~2026"],gym:"Co-working areas, rooftop deck w/ water views"},
+  reviews:[{src:"—",rating:"new",quote:"Just opened (2025); no resident reviews yet.",url:"https://liveatmaxwell.com/"}],
+  complaints:["Income-restricted — must qualify + lottery/waitlist","Years of surrounding construction","Flood/liquefaction (bay-edge site)"]
  }
 ];
 
