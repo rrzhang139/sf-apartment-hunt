@@ -13,6 +13,7 @@
   header h1{font-size:18px;margin:0}
   header .sub{color:var(--mut);font-size:13px}
   .chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+  .chips.price{flex-basis:100%;margin-left:0;margin-top:8px;align-items:center}
   .chip{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);cursor:pointer;font-size:13px}
   .chip.active{background:var(--acc);border-color:var(--acc);color:#001;font-weight:600}
   .wrap{display:grid;grid-template-columns:320px 1fr;height:calc(100vh - 56px)}
@@ -56,6 +57,7 @@
 <header>
   <div><h1>🏠 SF Apartment Hunt</h1><div class="sub">2BR · ~$4–8k total · parking optional · move-in Jul 20–mid Aug · Caltrain commute</div></div>
   <div class="chips" id="chips"></div>
+  <div class="chips price" id="pricechips"></div>
 </header>
 <div class="wrap">
   <div class="list" id="list"></div>
@@ -1011,11 +1013,21 @@ const DATA = [
 ];
 
 const HOODS = ["All","Hayes Valley","Mission Bay","Dogpatch","Potrero Hill","Mission"];
-let filter="All", selId=null, markers={}, curD=null, routeLayers=[], stationMarker=null, lastOpt=0;
+let filter="All", selId=null, markers={}, curD=null, routeLayers=[], stationMarker=null, lastOpt=0, priceMax=Infinity;
 
-// chips
+// representative "2BR from" price = first 4-digit $ amount in the rent band
+function priceOf(d){const m=d.rentBand.match(/\$\s*([\d,]{4,})/);return m?parseInt(m[1].replace(/,/g,'')):99999;}
+
+// neighborhood chips
 const chips=document.getElementById('chips');
-HOODS.forEach(h=>{const b=document.createElement('div');b.className='chip'+(h==='All'?' active':'');b.textContent=h;b.onclick=()=>{filter=h;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.textContent===h));renderList();};chips.appendChild(b);});
+HOODS.forEach(h=>{const b=document.createElement('div');b.className='chip'+(h==='All'?' active':'');b.textContent=h;b.onclick=()=>{filter=h;document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===h));renderList();};chips.appendChild(b);});
+
+// price chips (max 2BR-from rent)
+const PRICES=[["Any $",Infinity],["≤ $4.5k",4500],["≤ $5k",5000],["≤ $5.5k",5500],["≤ $6k",6000],["≤ $7k",7000]];
+const pc=document.getElementById('pricechips');
+const plabel=document.createElement('span');plabel.className='sub';plabel.textContent='💰 Max 2BR rent:';plabel.style.marginRight='2px';pc.appendChild(plabel);
+PRICES.forEach(([label,val])=>{const b=document.createElement('div');b.className='chip'+(val===Infinity?' active':'');b.textContent=label;b.onclick=()=>{priceMax=val;document.querySelectorAll('#pricechips .chip').forEach(c=>c.classList.toggle('active',c.textContent===label));renderList();};pc.appendChild(b);});
+const cntEl=document.createElement('span');cntEl.id='cnt';cntEl.className='sub';cntEl.style.marginLeft='8px';pc.appendChild(cntEl);
 
 // map
 const map=L.map('map').setView([37.766,-122.40],13);
@@ -1078,11 +1090,15 @@ function availBadge(a){return a==='yes'?'<span class="badge b-yes">2BR available
 
 function renderList(){
   const list=document.getElementById('list');list.innerHTML='';
-  DATA.filter(d=>filter==='All'||d.hood===filter).forEach(d=>{
+  const rows=DATA.filter(d=>(filter==='All'||d.hood===filter) && priceOf(d)<=priceMax);
+  rows.forEach(d=>{
     const c=document.createElement('div');c.className='card'+(d.id===selId?' sel':'');
     c.innerHTML=`<div class="nm">${d.name}</div><div class="ad">${d.hood} · ${d.address}</div><div class="rb">${availBadge(d.avail)} ${d.rentBand}</div>`;
     c.onclick=()=>select(d.id);list.appendChild(c);
   });
+  const cnt=document.getElementById('cnt');if(cnt)cnt.textContent=rows.length+' / '+DATA.length+' shown';
+  // sync map markers to the filter
+  DATA.forEach(d=>{if(markers[d.id]){const vis=rows.includes(d);markers[d.id].setStyle({opacity:vis?1:0.15,fillOpacity:vis?0.95:0.12});}});
 }
 
 function sev(s){return `<span class="sev-${s}">${s.toUpperCase()}</span>`;}
