@@ -304,16 +304,16 @@ const DATA = [
    {dir:"E",what:"Tennessee St + T-Third/freight (~0.2–0.4 mi): mild transit hum",s:"med"},
    {dir:"Interior courtyard",what:"Podium courtyard — quietest, best escape from the freeway",s:"low"}
   ]},
-  commute:{station:"22nd St Caltrain",best:"Walk — ~6–8 min, flat, free",
+  commute:{station:"22nd St Caltrain",best:"Walk — ~5–7 min, flat, free (basically at the station)",
    caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
-   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St (≈ 6-min walk + ~37-min train + ~8-min RWC walk + wait)",
    options:[
-    {mode:"🚶 Walk",time:"~6–8 min",cost:"free",freq:"—",route:"Indiana St → 22nd St to the platform",notes:"Quick, flat."},
-    {mode:"🚌 Muni 55-Dogpatch",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"Indiana/20th → 22nd St / Pennsylvania",notes:"Marginal vs walking on this hop."}
+    {mode:"🚶 Walk",time:"~5–7 min",cost:"free",freq:"—",route:"Indiana St → 22nd St to the platform",notes:"Right by the station — quick, flat."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"Indiana/20th → 22nd St / Pennsylvania",notes:"Pointless vs walking — you're already next to the platform."}
    ],
-   rushTip:"Leave ~8:20am, ~7-min walk, make the ~8:35 southbound. ~60 min to the office."},
+   rushTip:"~5-min walk to the platform, catch a ~8:35 southbound. The station's at your doorstep; the ~37-min train ride is what sets the total. ~60 min to the office."},
   sound:"~2017 AvalonBay build — 3 wood-framed 5-story buildings over a shared garage, purpose-built as an I-280 acoustic buffer. Request an east/courtyard unit away from the freeway. Reviews flag in-unit exhaust-fan and neighbor noise — inspect in person.",
-  amenities:{coffee:["The Daily Driver","Farley's","Dogpatch breweries (Harmonic, Triple Voodoo)"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~6–8 min)","T-Third (3rd St)","Mariposa Muni ~0.5 mi"],gym:"Fitness center w/ yoga studio + Fitness on Demand; roof decks, WAG pet spa, bike storage"},
+  amenities:{coffee:["The Daily Driver","Farley's","Dogpatch breweries (Harmonic, Triple Voodoo)"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5–7 min)","T-Third (3rd St)","Mariposa Muni ~0.5 mi"],gym:"Fitness center w/ yoga studio + Fitness on Demand; roof decks, WAG pet spa, bike storage"},
   reviews:[
    {src:"ApartmentRatings",rating:"1★ maint/noise/safety",quote:"Renters rate maintenance, noise, and safety 1/5; neighborhood 5/5.",url:"https://www.apartmentratings.com/ca/san-francisco/avalon-dogpatch_9199332346275184019/"},
    {src:"Tenant dossier",rating:"—",quote:"Resident-run site documents unresolved exhaust-fan noise and patch-job repairs.",url:"https://avalondogpatchtenants.org/"},
@@ -526,6 +526,144 @@ const DATA = [
   amenities:{coffee:["The Daily Driver","Dogpatch breweries"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (2 blks)","T-Third out front","Crane Cove Park nearby"],gym:"Fitness center, bay-view roof deck w/ fire pit + dog run, bike elevator"},
   reviews:[{src:"Greystar / listings",rating:"—",quote:"High-end finishes (Arclinea, Miele, 12-ft ceilings) + roof deck are the draw; small building.",url:"https://www.greystar.com/properties/san-francisco-ca/the-martin-apartments"}],
   complaints:["T-Third/3rd St noise on west units","Parking is paid + stacker (slower in/out)","Boutique pricing; many monthly add-on fees"]
+ },
+ {
+  id:"knox", name:"Knox", hood:"Dogpatch", address:"1300 22nd St, 94107",
+  lat:37.7574, lng:-122.3902, year:"2017", modern:"yes (boutique condo)", avail:"yes",
+  rentBand:"2BR/2BA ~$5,500–6,500 (condo-by-condo)", each:"~$3,000 ea", caltrain:"22nd St ~1 block / ~2–3 min ★★★★", parking:"garage $300/mo (some units incl)",
+  verdict:"Closest building to the station in the set — literally one block. 91-unit boutique with Ikon Coffee in the lobby; rented condo-by-condo (ReLISTO), so availability + parking vary per unit.",
+  units:[
+   {u:"2BR/2BA (e.g. #210 corner, #318)",bb:"2/2",sf:"~1,000–1,150",rent:"~$5,500–6,500",av:"per-unit — check ReLISTO listings",link:"https://www.relisto.com/building/the-knox-sf/"},
+   {u:"1BR (cheaper)",bb:"1/1",sf:"~600–800",rent:"inquire",av:"per-unit",link:"https://www.apartments.com/knox-san-francisco-ca/7dwq5jz/"}
+  ],
+  contact:{phone:"via ReLISTO",email:"—",site:"https://knox201.com/",apply:"https://www.relisto.com/building/the-knox-sf/"},
+  externalities:[
+   {f:"Caltrain/freight horns",s:"med",n:"~1 blk W; you trade an ultra-short walk for some train noise — get an east unit"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; use the garage"},
+   {f:"T-Third (3rd St)",s:"low",n:"~1.5 blks E; minor"},
+   {f:"I-280 (~2 blks W)",s:"low",n:"background drone on west units"}
+  ],
+  facing:{best:"East / courtyard — away from the Caltrain tracks (W)",sides:[
+   {dir:"W",what:"Caltrain tracks + 22nd St station (~1 blk): horns/announcements — the loud side",s:"med"},
+   {dir:"E / courtyard",what:"Interior courtyard (BBQ, fire pits) / Tennessee St — quietest",s:"low"},
+   {dir:"N / S",what:"22nd St + side streets — calm, some daytime foot traffic",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~2–3 min (one block, the shortest in the set)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~52–62 min door-to-door to 500 Arguello St (≈ 3-min walk + ~37-min train + ~8-min RWC walk + wait)",
+   options:[
+    {mode:"🚶 Walk",time:"~2–3 min",cost:"free",freq:"—",route:"22nd St → Pennsylvania to the platform (1 block)",notes:"Closest building to the station — you can see the train from here."},
+    {mode:"🚊 T-Third",time:"~4 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express trains",notes:"Only if you want an express from 4th & King."}
+   ],
+   rushTip:"Roll out ~8:30, walk one block, make the southbound. Trade-off: that proximity means some train-horn noise — pick an east-facing unit. ~55 min to the office."},
+  sound:"2017 boutique build, 91 units, condo-quality finishes (Bosch, Nest, in-unit W/D). One block from the tracks, so west units hear horns — request east/courtyard. Ikon Coffee in the lobby.",
+  amenities:{coffee:["Ikon Coffee (in lobby)","The Daily Driver"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (1 blk)","T-Third (3rd St)","I-280 nearby"],gym:"Fitness center, courtyard w/ BBQ + fire pits, media room, bike room, concierge"},
+  reviews:[{src:"ReLISTO listings",rating:"—",quote:"Corner 2BRs w/ island kitchens, A/C, in-unit W/D; parking +$300 or included on some units.",url:"https://www.relisto.com/building/the-knox-sf/"}],
+  complaints:["Train-horn noise on west units (1 blk from tracks)","Rented condo-by-condo — inconsistent terms/availability","Parking often a separate $300"]
+ },
+ {
+  id:"landing", name:"The Landing (by Sentral)", hood:"Dogpatch", address:"1395 22nd St, 94107",
+  lat:37.7572, lng:-122.3912, year:"~2016", modern:"yes (luxury)", avail:"yes",
+  rentBand:"2BR ~$5,478–6,900 (range to ~$8,061)", each:"~$3,100 ea", caltrain:"22nd St ~3–4 min walk ★★★★", parking:"~$400/mo garage",
+  verdict:"Luxury tower right at the station — SMEG kitchens, rooftop park. 2BRs from ~$5,478 (B11 905sf $6,600; B19 1,090sf ~$6,725). Recently rebranded 'by Sentral'; ~7 units live.",
+  units:[
+   {u:"B11",bb:"2/2",sf:"905",rent:"~$6,600",av:"call to confirm Aug window",link:"https://www.rent.com/apartment/the-landing-san-francisco-ca-lc5894727"},
+   {u:"B19",bb:"2/2",sf:"1,090–1,095",rent:"~$6,725–6,900",av:"call to confirm",link:"https://www.apartments.com/the-landing-san-francisco-ca/3gg6h5e/"},
+   {u:"2BR (from)",bb:"2/2",sf:"~900+",rent:"from ~$5,478",av:"~7 units live",link:"https://www.rentcafe.com/apartments/ca/san-francisco/the-landing-8/default.aspx"}
+  ],
+  contact:{phone:"(628) 900-1413",email:"—",site:"https://www.thelandingsf.com/",apply:"https://www.thelandingsf.com/"},
+  externalities:[
+   {f:"Caltrain/freight horns",s:"med",n:"adjacent to the station; west/track units hear horns — get an east unit"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; use the garage"},
+   {f:"T-Third (3rd St)",s:"low",n:"~2 blks E; minor"},
+   {f:"Management transition (Sentral rebrand)",s:"low",n:"recently rebranded — confirm current operator + terms"}
+  ],
+  facing:{best:"East / rooftop-park side — away from the Caltrain tracks (W/S)",sides:[
+   {dir:"W / S",what:"Caltrain tracks + 22nd St station: horns/announcements — the loud side",s:"med"},
+   {dir:"E",what:"Dogpatch interior / rooftop park — quieter",s:"low"},
+   {dir:"N",what:"22nd St — some daytime foot traffic",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~3–4 min (right at the station)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~53–63 min door-to-door to 500 Arguello St (≈ 4-min walk + ~37-min train + ~8-min RWC walk + wait)",
+   options:[
+    {mode:"🚶 Walk",time:"~3–4 min",cost:"free",freq:"—",route:"22nd St → Pennsylvania to the platform",notes:"Among the closest to the station — the rooftop overlooks the line."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express trains",notes:"Only for an express from 4th & King."}
+   ],
+   rushTip:"~4-min walk to the platform. Like Knox, the price of that proximity is train-horn noise — pick an east unit. ~56 min to the office."},
+  sound:"~2016 luxury tower w/ rooftop park, SMEG appliances, in-unit W/D. Adjacent to the station = horns on west/track units; request east-facing. Recently rebranded 'The Landing by Sentral'.",
+  amenities:{coffee:["The Daily Driver","Dogpatch breweries"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~3–4 min)","T-Third (3rd St)","I-280 nearby"],gym:"Fitness center, rooftop park, resident lounge"},
+  reviews:[{src:"Yelp / listings",rating:"—",quote:"Rooftop park + finishes praised; note the recent 'by Sentral' management change.",url:"https://www.yelp.com/biz/the-landing-san-francisco-2"}],
+  complaints:["Train-horn noise on track-facing units","Luxury pricing","Management transition (Sentral rebrand)"]
+ },
+ {
+  id:"windsor", name:"Windsor at Dogpatch", hood:"Dogpatch", address:"2660 3rd St, 94107",
+  lat:37.7558, lng:-122.3877, year:"2017 (Windsor)", modern:"yes", avail:"yes",
+  rentBand:"2BR ~$6,603–6,819 (BMR units lower)", each:"~$3,350 ea", caltrain:"22nd St ~7–9 min walk ★★★", parking:"$250–350/mo (BMR $100, waitlist)",
+  verdict:"Large 2017 Windsor community (263 units) with rooftop deck + commercial-kitchen lounge. Has below-market-rate units worth checking if you income-qualify. Jul/Aug/Sep availability.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~900–1,100",rent:"~$6,603–6,819",av:"Jul/Aug/Sep move-ins listed",link:"https://www.windsorcommunities.com/properties/windsor-at-dogpatch/floorplans/"},
+   {u:"BMR units (income-qualified)",bb:"studio–2/1–2",sf:"varies",rent:"from ~$4,103",av:"lottery/waitlist",link:"https://housing.sfgov.org/listings/a0W4U00000SWuDJUA1"}
+  ],
+  contact:{phone:"via Windsor site",email:"—",site:"https://www.windsorcommunities.com/properties/windsor-at-dogpatch/",apply:"https://www.windsorcommunities.com/properties/windsor-at-dogpatch/"},
+  externalities:[
+   {f:"3rd St + T-Third light rail",s:"med",n:"out front: bells/squeal + traffic on west units"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; use the garage"},
+   {f:"Caltrain/freight (~0.4 mi W)",s:"low",n:"some night freight; not adjacent"},
+   {f:"Chase Center event nights",s:"low",n:"~1 mi N; minor traffic"}
+  ],
+  facing:{best:"East — bay side, away from 3rd St (W)",sides:[
+   {dir:"W / 3rd St",what:"T-Third light rail + traffic out front: the loud side",s:"med"},
+   {dir:"E",what:"Toward the bay / interior — quieter, rooftop-deck views",s:"low"},
+   {dir:"N / S",what:"Side streets — calm, industrial-quiet at night",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~7–9 min, or T-Third from the door",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~58–68 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~7–9 min",cost:"free",freq:"—",route:"3rd St N → 22nd St to the platform",notes:"Flat walk up 3rd St."},
+    {mode:"🚊 T-Third (out front)",time:"~4 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 22nd St or 4th & King",notes:"Light rail at the door."}
+   ],
+   rushTip:"Walk ~8 min to 22nd St, or ride the T. Leave ~8:20 for a ~8:35 southbound. ~62 min to the office."},
+  sound:"2017 Windsor build (opened as Abaca), 263 units, 6 stories. 3rd-St side gets the T-Third; ask for an east/bay unit. Rooftop deck + commercial-kitchen lounge. Some BMR (non-rent-controlled) units.",
+  amenities:{coffee:["The Daily Driver","Dogpatch breweries"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~7–9 min)","T-Third out front","Crane Cove Park nearby"],gym:"Fitness center, rooftop deck, lounge w/ commercial kitchen + bar"},
+  reviews:[{src:"ApartmentRatings (20 reviews)",rating:"mixed",quote:"Rooftop + units praised; large building, transformer floorplans w/ murphy beds.",url:"https://www.apartmentratings.com/ca/san-francisco/windsor-at-dogpatch_9199332346275173635/"}],
+  complaints:["T-Third/3rd St noise on west units","Premium 2BR pricing","BMR units not rent-controlled"]
+ },
+ {
+  id:"mason", name:"Mason on Mariposa", hood:"Potrero Hill", address:"1601 Mariposa St, 94107",
+  lat:37.7635, lng:-122.3975, year:"2020 (Related)", modern:"yes (newest)", avail:"yes",
+  rentBand:"2BR ~$5,500–7,000 (studio/1BR from ~$4,000)", each:"~$3,100 ea", caltrain:"22nd St ~12–15 min walk / bus ★★", parking:"garage + EV + car-share (ask)",
+  verdict:"Newest build in the set (2020), Marmol Radziner design, sky lounge + rooftop. Cheaper entry via studios/1BRs; 2BRs mid-pack. Caltrain is a 12–15 min walk (slightly uphill into Potrero).",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~950–1,200",rent:"~$5,500–7,000",av:"call to confirm Aug window",link:"https://www.relatedrentals.com/apartment-rentals/san-francisco/potrero-hill/mason-mariposa"},
+   {u:"Studio / 1BR (cheaper)",bb:"0–1/1",sf:"~500–800",rent:"from ~$4,000",av:"live",link:"https://www.apartments.com/mason-on-mariposa-san-francisco-ca/b1rlv7c/"}
+  ],
+  contact:{phone:"(415) 960-3500",email:"—",site:"https://www.relatedrentals.com/apartment-rentals/san-francisco/potrero-hill/mason-mariposa",apply:"https://www.relatedrentals.com/apartment-rentals/san-francisco/potrero-hill/mason-mariposa"},
+  externalities:[
+   {f:"Mariposa St traffic",s:"low",n:"arterial to/from I-280; some daytime traffic on north units"},
+   {f:"Car break-ins",s:"med",n:"use the garage; standard caution"},
+   {f:"I-280 (~0.3 mi E)",s:"low",n:"background drone toward the freeway side"},
+   {f:"Caltrain is a walk/bus",s:"med",n:"~0.6 mi to 22nd St — longer first-mile + slight Potrero grade"}
+  ],
+  facing:{best:"South / rooftop side — away from Mariposa St traffic (N)",sides:[
+   {dir:"N / Mariposa",what:"Mariposa St arterial: daytime traffic toward I-280",s:"low"},
+   {dir:"S",what:"Potrero Hill interior — quieter, residential",s:"low"},
+   {dir:"Rooftop / interior",what:"Sky lounge + courtyards — quietest, best views",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~12–15 min, or 22/55 bus",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~65–75 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~12–15 min",cost:"free",freq:"—",route:"Mariposa/18th SE down to 22nd St",notes:"Slightly downhill toward the station; uphill home."},
+    {mode:"🚌 Muni 22-Fillmore",time:"~6 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 10–15 min",route:"16th St toward Mission Bay (transfer)",notes:"Frequent but doesn't reach 22nd St directly."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~10 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"toward 22nd St / Pennsylvania",notes:"One-seat-ish to the station area."}
+   ],
+   rushTip:"Walk ~13 min downhill to 22nd St (uphill home), or grab a bus. Leave ~8:05 for a ~8:25–8:40 southbound. ~68 min to the office."},
+  sound:"2020 Related build (newest here), 4 stories, Marmol Radziner design, in-unit W/D. Quiet residential Potrero block; north side faces Mariposa traffic. Sky lounge + rooftop terrace. Some BMR units.",
+  amenities:{coffee:["Farley's","Design District cafés"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (16th St)"],transit:["22nd St Caltrain (walk/bus)","22/55 bus","I-280 nearby"],gym:"Fitness center, sky lounge w/ demo kitchen, rooftop terrace, co-working"},
+  reviews:[{src:"Yelp (23 reviews)",rating:"—",quote:"Design + amenities praised (Marmol Radziner); newest building in the area.",url:"https://www.yelp.com/biz/mason-on-mariposa-san-francisco"}],
+  complaints:["Caltrain is a 12–15 min walk / bus","2BRs mid-to-upper pricing","Slight Potrero grade walking home"]
  }
 ];
 
@@ -618,7 +756,8 @@ function select(id){
     <div class="note"><b>Best daily:</b> ${cmt.best} &nbsp;·&nbsp; 🗺️ <span style="color:var(--acc)">click a row to draw it on the map</span></div>
     <table><tr><th>Mode</th><th>Time</th><th>Fare</th><th>Frequency</th><th>Route / notes</th></tr>${cmt.options.map((o,i)=>`<tr class="cmt-row" onclick="highlightRoute(${i})"><td><b>${o.mode}</b></td><td>${o.time}</td><td>${o.cost}</td><td>${o.freq}</td><td>${o.route}${o.notes?` — <span style="color:var(--mut)">${o.notes}</span>`:''}</td></tr>`).join('')}</table>
     <div class="kv" style="margin-top:8px"><span class="k">Caltrain leg</span><span>${cmt.caltrainLeg}</span></div>
-    <div class="kv"><span class="k">Door→office</span><span>${cmt.doorToOffice}</span></div>
+    <div class="kv"><span class="k">Total door→office</span><span>${cmt.doorToOffice}</span></div>
+    <div class="note" style="margin-top:4px">ℹ️ <b>Total = walk to the station (the Walk row above) + the Caltrain leg + ~8-min walk in Redwood City + waiting.</b> The ~37-min train ride dominates, so being next to the station mainly shortens the first leg — it doesn't shrink the whole commute.</div>
     ${cmt.rushTip?`<div class="note">⏰ <b>Weekday rush:</b> ${cmt.rushTip}</div>`:''}
   </div>`:'';
   const revs=d.reviews.length?d.reviews.map(r=>`<tr><td>${r.src}</td><td>${r.rating||'—'}</td><td>${r.quote}</td><td><a href="${r.url}" target="_blank">link ↗</a></td></tr>`).join(''):`<tr><td colspan="4" class="empty">Resident reviews being scraped by the research fleet (Reddit / Yelp / ApartmentRatings / forums) — landing in the full app.</td></tr>`;
