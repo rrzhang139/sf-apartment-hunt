@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SF Apartment Hunt — Richard</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--panel2:#222c38;--line:#2c3947;--txt:#e6edf3;--mut:#8b9aa9;--acc:#4ea1ff;--good:#3fb950;--warn:#d29922;--bad:#f85149}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+  header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--panel)}
+  header h1{font-size:18px;margin:0}
+  header .sub{color:var(--mut);font-size:13px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+  .chip{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);cursor:pointer;font-size:13px}
+  .chip.active{background:var(--acc);border-color:var(--acc);color:#001;font-weight:600}
+  .wrap{display:grid;grid-template-columns:320px 1fr;height:calc(100vh - 56px)}
+  .list{overflow-y:auto;border-right:1px solid var(--line);background:var(--panel)}
+  .card{padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+  .card:hover{background:var(--panel2)}
+  .card.sel{background:var(--panel2);border-left:3px solid var(--acc)}
+  .card .nm{font-weight:600;font-size:14px}
+  .card .ad{color:var(--mut);font-size:12px;margin:2px 0}
+  .card .rb{font-size:13px;margin-top:4px}
+  .badge{display:inline-block;font-size:11px;padding:2px 7px;border-radius:10px;margin-right:5px}
+  .b-yes{background:rgba(63,185,80,.15);color:var(--good)}
+  .b-warn{background:rgba(210,153,34,.15);color:var(--warn)}
+  .b-no{background:rgba(248,81,73,.15);color:var(--bad)}
+  .right{display:grid;grid-template-rows:300px 1fr;overflow:hidden}
+  #map{width:100%;height:100%}
+  .detail{overflow-y:auto;padding:20px 24px}
+  .detail h2{margin:0 0 2px}
+  .detail .addr{color:var(--mut);margin-bottom:10px}
+  .sec{margin:18px 0;border-top:1px solid var(--line);padding-top:14px}
+  .sec h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--acc);margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:500;font-size:12px}
+  a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+  .btn{display:inline-block;padding:5px 11px;border-radius:6px;background:var(--acc);color:#001 !important;font-size:12px;font-weight:600;margin:2px 4px 2px 0}
+  .btn.ghost{background:transparent;border:1px solid var(--acc);color:var(--acc) !important}
+  .pill{font-size:12px;padding:2px 8px;border-radius:10px;background:var(--panel2);margin-right:5px;display:inline-block;margin-bottom:4px}
+  .sev-high{color:var(--bad)}.sev-med{color:var(--warn)}.sev-low{color:var(--good)}
+  .empty{color:var(--mut);font-size:13px;font-style:italic}
+  .kv{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .kv .k{color:var(--mut);min-width:90px}
+  .note{font-size:12px;color:var(--mut);background:var(--panel2);padding:8px 10px;border-radius:6px;margin-top:8px}
+  .cmt-row{cursor:pointer}.cmt-row:hover{background:var(--panel2)}
+  .cmt-row.active{background:rgba(78,161,255,.14);box-shadow:inset 3px 0 0 var(--acc)}
+  .leaflet-tooltip.st-tt{background:#001d3d;color:#cfe6ff;border:1px solid var(--acc);font-weight:600}
+  .train-ic{font-size:19px;line-height:24px;text-align:center;filter:drop-shadow(0 1px 2px #000)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🏠 SF Apartment Hunt</h1><div class="sub">2BR · ~$4–8k total · parking optional · move-in Jul 20–mid Aug · Caltrain commute</div></div>
+  <div class="chips" id="chips"></div>
+</header>
+<div class="wrap">
+  <div class="list" id="list"></div>
+  <div class="right">
+    <div id="map"></div>
+    <div class="detail" id="detail"><p class="empty">Select a building from the list or map to see full details.</p></div>
+  </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const DATA = [
+ {
+  id:"alta", name:"Alta Potrero", hood:"Potrero Hill", address:"1301 16th St, 94103",
+  lat:37.7668, lng:-122.3993, year:"~2017 (Greystar)", modern:"yes", avail:"yes",
+  rentBand:"2BR $4,776–$4,886", each:"~$2,540 ea", caltrain:"22nd St ~10–15 min (downhill) / buses", parking:"~$300–450/mo (optional)",
+  verdict:"Best value + most live inventory. Cleanest externality profile of the cheap picks.",
+  units:[
+   {u:"B7",bb:"2/2",sf:"917",rent:"~$4,776",av:"call to confirm window",link:"https://www.rentcafe.com/apartments/ca/san-francisco/alta-potrero0/default.aspx"},
+   {u:"B1.1",bb:"2/2",sf:"966",rent:"~$4,876",av:"call",link:"https://altapotrero.com/floorplans/"},
+   {u:"TH2 (townhome)",bb:"2/2",sf:"1,214",rent:"~$4,871",av:"call",link:"https://altapotrero.com/floorplans/"},
+   {u:"B5.1",bb:"2/2",sf:"979",rent:"~$4,886",av:"call",link:"https://altapotrero.com/floorplans/"}
+  ],
+  contact:{phone:"(628) 251-1101",email:"—",site:"https://altapotrero.com/",apply:"https://9174385.onlineleasing.realpage.com/"},
+  externalities:[
+   {f:"Hwy-101 hum + air",s:"med",n:"~0.25–0.4 mi W; keep windows closed on west units"},
+   {f:"Car break-ins",s:"med",n:"dominant local property crime; use garage, don't street-park valuables"},
+   {f:"16th & Mission scene (on walk W)",s:"med",n:"~1 mi W; going east/south is fine"},
+   {f:"ZSFG hospital sirens",s:"low",n:"~0.6 mi S; intermittent, not adjacent"},
+   {f:"Dead/industrial at night",s:"low",n:"few people out late on weekends"},
+   {f:"Flood",s:"low",n:"FEMA zone X (low)"}
+  ],
+  facing:{best:"East-facing — away from Hwy-101 on the west",sides:[
+   {dir:"W",what:"Hwy-101 (~0.25–0.4 mi): freeway hum + air; toward 16th & Mission scene",s:"high"},
+   {dir:"E",what:"Design District / Dogpatch side — quieter, closer to 22nd St train",s:"low"},
+   {dir:"N / S",what:"16th St + side streets: some bus/traffic, industrial-quiet at night",s:"med"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~12–15 min, flat→downhill, free (beats the bus for this distance)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart, Clipper discount ended Jan 2026)",
+   doorToOffice:"~65–75 min door-to-door to 500 Arguello St (Dyna Robotics / Fish & Richardson bldg)",
+   options:[
+    {mode:"🚶 Walk",time:"~12–15 min",cost:"free",freq:"—",route:"16th St E → Pennsylvania Ave, gentle downhill to the 22nd St platform",notes:"Best daily pick. Flat through the Design District; 1301 16th sits in the flats, so the return isn't a real Potrero climb."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~6–8 min ride + wait",cost:"$2.85 Clipper / $3 cash; Caltrain transfer discounted up to $2.85 within 2 hrs",freq:"~every 15–20 min (peak)",route:"Board on 16th St → 22nd St / Pennsylvania (at the station)",notes:"Only worth it in rain or when tired — the wait usually eats the time saved on so short a hop."},
+    {mode:"🚌 Muni 48",time:"~10 min + walk to stop",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"24th St / Potrero corridor → directly to 22nd St Caltrain",notes:"Serves the station door, but its stops sit a few blocks south of Alta — less handy than the 55 or just walking."}
+   ],
+   rushTip:"Leave Alta ~8:05am, ~12-min walk, catch a southbound train ~8:25–8:40 (more trains run at peak). Tag Clipper on AND off at Caltrain. Reverse is a slight uphill walk home but not steep. ~65 min to the office."},
+  sound:"Modern 2017 construction. Request a non-freeway-facing (non-west) unit; tour at rush hour for 101 noise.",
+  amenities:{coffee:["Farley's","The Daily Driver (Dogpatch)"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (16th St)"],transit:["22nd St Caltrain (downhill)","22/19/10/48 bus","T-Third on 3rd St"],gym:"In-building fitness + rooftop"},
+  reviews:[],
+  complaints:["Car/vehicle break-ins in the area","Freeway noise on west-facing units","Quiet/industrial feel at night"]
+ },
+ {
+  id:"777tenn", name:"777 Tenn", hood:"Dogpatch", address:"777 Tennessee St, 94107",
+  lat:37.7585, lng:-122.3886, year:"~2017 (Greystar)", modern:"yes", avail:"yes",
+  rentBand:"2BR from ~$5,281", each:"~$2,790 ea", caltrain:"22nd St ~5 min walk ★★★", parking:"garage (ask; ~$100 BMR rate listed)",
+  verdict:"Best Caltrain + sun + brewery social scene. One live 2BR (#509) timed for your window.",
+  units:[
+   {u:"Clarksville #509",bb:"2/2",sf:"938",rent:"~$5,281",av:"available 7/11/2026 ✓",link:"https://www.live777tenn.com/floorplans/the-clarksville"},
+   {u:"Vanderbilt",bb:"2/1",sf:"741",rent:"inquire",av:"none released",link:"https://www.live777tenn.com/floorplans"},
+   {u:"Tennessee",bb:"2/2",sf:"1,127",rent:"inquire",av:"none released",link:"https://www.live777tenn.com/floorplans"}
+  ],
+  contact:{phone:"(844) 887-0740",email:"—",site:"https://www.live777tenn.com/",apply:"https://www.live777tenn.com/floorplans"},
+  externalities:[
+   {f:"Car break-ins",s:"high",n:"vehicle larceny ≈25% of area incidents; secured garage important"},
+   {f:"T-Third light rail",s:"med",n:"~1 blk E on 3rd St; bells/squeal, east units hear it"},
+   {f:"Caltrain/freight horns",s:"med",n:"~0.3–0.4 mi W; some night freight"},
+   {f:"I-280 noise/air",s:"med",n:"~3 blks W; west units"},
+   {f:"Chase Center event nights",s:"med",n:"~0.8 mi N; ~100 nights/yr traffic+crowds"},
+   {f:"Liquefaction/SLR",s:"low",n:"long-term/seismic, not daily"}
+  ],
+  facing:{best:"High floor, interior or N/S — away from 3rd St (E) and I-280 (W)",sides:[
+   {dir:"E",what:"3rd St + T-Third light rail (1 blk): bells/squeal, daytime traffic",s:"med"},
+   {dir:"W",what:"I-280 (~3 blks) + Caltrain/freight horns (~0.3–0.4 mi)",s:"med"},
+   {dir:"Interior",what:"Courtyard / high floor — quietest, best sun",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~5 min, flat, free (basically at the station)",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"Tennessee St → 22nd St to the platform",notes:"The whole point of living here — shortest first-mile in the set."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~3 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"Nearby 3rd/20th stops → 22nd St",notes:"Walking is faster than the wait."}
+   ],
+   rushTip:"Leave ~8:25am, 5-min walk, make the ~8:35 southbound. Tag Clipper on AND off. ~58 min to the office."},
+  sound:"2017 build. Quietest units: higher floors facing away from 3rd St (E) and I-280 (W). Tenant reviews mention interior floor/neighbor noise — vet in person.",
+  amenities:{coffee:["The Daily Driver","Dogpatch breweries (Harmonic, Triple Voodoo)"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (5 min)","T-Third","22/48 bus"],gym:"In-building amenities"},
+  reviews:[],
+  complaints:["Car break-ins","Interior/neighbor noise (thin floors per reviews)","Freeway + transit background noise"]
+ },
+ {
+  id:"om", name:"O&M Dogpatch", hood:"Dogpatch", address:"680 Indiana St, 94107",
+  lat:37.7625, lng:-122.3955, year:"2017 (Mitsui)", modern:"yes", avail:"warn",
+  rentBand:"2BR ~$4,200–5,200", each:"~$2,400 ea", caltrain:"22nd St ~3–4 blks; NO train horns (below-grade)", parking:"$250–300/mo",
+  verdict:"Cheaper Dogpatch value + uniquely no train horns. Big caveat: I-280 is 1 block W — insist on east/courtyard unit.",
+  units:[
+   {u:"B1–B6 (2BR) / L6–L10 (lofts)",bb:"2/2",sf:"~900–1,280",rent:"~$4,200–5,200",av:"call to confirm window",link:"https://www.oandmsf.com/apartments/ca/san-francisco/floor-plans"}
+  ],
+  contact:{phone:"(415) 579-0695",email:"—",site:"https://www.oandmsf.com/",apply:"https://www.oandmsf.com/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"high",n:"~1 blk W (elevated viaduct); single biggest factor — get east-facing"},
+   {f:"Car break-ins",s:"med",n:"pay for garage; don't leave anything visible"},
+   {f:"Chase Center event nights",s:"med",n:"~0.7 mi N"},
+   {f:"Nearby construction (Pier 70/Power Station)",s:"med",n:"multi-year buildout"},
+   {f:"Caltrain horns",s:"low",n:"below-grade tunnel here = essentially none ✓"}
+  ],
+  facing:{best:"East / courtyard — escape I-280 on the west",sides:[
+   {dir:"W",what:"I-280 elevated viaduct (~1 blk): biggest noise + air factor here",s:"high"},
+   {dir:"E",what:"Indiana St / courtyard side — quietest; Caltrain below-grade = no horns",s:"low"},
+   {dir:"N / S",what:"Side streets — low-key, industrial-quiet at night",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~6–8 min, flat, free",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~6–8 min",cost:"free",freq:"—",route:"Indiana St → 22nd St to the platform",notes:"Station is below-grade here, so no horns even this close."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"Indiana/20th → 22nd St / Pennsylvania",notes:"Marginal vs walking."}
+   ],
+   rushTip:"Leave ~8:20am, ~7-min walk, catch the ~8:35 southbound. ~60 min to the office."},
+  sound:"2017 build. East/courtyard-facing units strongly preferred to escape I-280. Special: '$500 off if you lease within 24h of tour.'",
+  amenities:{coffee:["Dogpatch cafés/breweries"],grocery:["Whole Foods (17th)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (no horns)","T-Third (3rd St)"],gym:"In-building"},
+  reviews:[],
+  complaints:["I-280 freeway noise/air on west units","Car break-ins","Interior neighbor noise (reviews)"]
+ },
+ {
+  id:"bartlett", name:"45 Bartlett (The Vida)", hood:"Mission", address:"45 Bartlett St, 94110",
+  lat:37.7525, lng:-122.4193, year:"2013", modern:"yes", avail:"yes",
+  rentBand:"2BR $4,095–$4,250", each:"~$2,180 ea", caltrain:"transfer: 22nd St / Muni to 4th&King", parking:"$250/mo",
+  verdict:"Cheapest + best nightlife. BUT worst externalities — tour the block AT NIGHT before deciding.",
+  units:[
+   {u:"#408",bb:"2/2",sf:"~980",rent:"~$4,095",av:"active listing",link:"https://www.apartments.com/45-bartlett-st-san-francisco-ca-unit-408/7gjpr9y/"},
+   {u:"#608",bb:"2/2",sf:"~980",rent:"~$4,150",av:"active listing",link:"https://www.apartments.com/45-bartlett-st-san-francisco-ca-unit-608/jc3xmy6/"}
+  ],
+  contact:{phone:"via site",email:"—",site:"https://www.45bartlett.com/",apply:"https://www.45bartlett.com/"},
+  externalities:[
+   {f:"Capp St open-air drug activity",s:"high",n:"~1–1.5 blks E; on your walk to the east side"},
+   {f:"24th St BART plaza",s:"med",n:"~2.5 blks S; vendors/crowds, worse after dark"},
+   {f:"Mission St transit noise",s:"med",n:"1 blk E; buses/sirens on east units"},
+   {f:"Episodic gun violence (broader Mission)",s:"med",n:"~0.5 mi E (Treat corridor); mostly targeted"},
+   {f:"Nightlife noise (Valencia/Mission)",s:"low",n:"shielded on Bartlett itself"}
+  ],
+  facing:{best:"West-facing (toward Valencia) — away from Mission St on the east",sides:[
+   {dir:"E",what:"Mission St (1 blk): buses/sirens; toward Capp St open-air drug activity",s:"high"},
+   {dir:"W",what:"Bartlett St / Valencia corridor — shielded, quieter, cafés",s:"low"},
+   {dir:"N / S",what:"Bartlett dead-end + side streets — calm; nightlife hum farther off",s:"med"}
+  ]},
+  commute:{station:"22nd St Caltrain (transfer)",best:"Bike ~12 min, or Muni 22/55 east ~20–25 min — Caltrain isn't walkable from here",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~75–90 min door-to-door — the slowest first-mile of the set (the nightlife-vs-commute tradeoff)",
+   options:[
+    {mode:"🚲 Bike",time:"~12–15 min",cost:"free",freq:"—",route:"17th St / Mariposa east to 22nd St station",notes:"Fastest reliable option; flat-ish. Own bike or Bay Wheels."},
+    {mode:"🚌 Muni 22-Fillmore",time:"~20 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 10–15 min",route:"16th St E toward Mission Bay, then transfer/walk",notes:"Rerouted to Mission Bay — no longer reaches 22nd St directly."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~20–25 min",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"16th & Mission → Dogpatch / 22nd St",notes:"One-seat to the station but slow."}
+   ],
+   rushTip:"Realistically bike to 22nd St (~12 min) for a southbound train, or budget a full transfer. 24th St BART is 4 min away but doesn't connect cleanly to your Peninsula commute."},
+  sound:"2013 condo build (114 units). Bartlett St itself is a quiet, shielded dead-end; the grit is 1 block east. In-unit W/D.",
+  amenities:{coffee:["Valencia St cafés (2 blks W)","Ritual/Four Barrel nearby"],grocery:["Gus's Community Market","Bi-Rite (18th)","Foods Co"],transit:["24th St BART (4 min)","14/49 bus on Mission"],gym:"—"},
+  reviews:[{src:"ReLISTO (#307 listing)",rating:"—",quote:"2BR/2BA ~$4,250, 1 parking space included (now rented)",url:"https://www.relisto.com/rentals/306654471-45-bartlett-st-307-san-francisco-ca-94110/"}],
+  complaints:["Open-air drug activity 1 block east (Capp St)","24th/Mission plaza disorder at night","Mission St noise on east units"]
+ },
+ {
+  id:"160brannan", name:"160 Brannan", hood:"Mission Bay", address:"160 Brannan St, 94107 (South Beach)",
+  lat:37.7836, lng:-122.3905, year:"~2004", modern:"yes (amenity-heavy)", avail:"warn",
+  rentBand:"furnished $5,150–5,540; unfurn ~$3,970–4,440", each:"~$2,770 ea (furnished)", caltrain:"~8–10 min walk to 4th&King ★★★", parking:"~$175/mo",
+  verdict:"Waterfront + ballpark energy + loaded amenities. Furnished 2BRs available flexible-start; ~81 Giants nights is the cost.",
+  units:[
+   {u:"#1809 (furnished)",bb:"2/2",sf:"913",rent:"$5,540 (was $5,660)",av:"flexible start — confirm Jul/Aug",link:"https://www.apartments.com/160-brannan-st-san-francisco-ca-unit-fl3-id1809/n2lygpq/"},
+   {u:"FL2-322 (furnished)",bb:"2/2",sf:"~840–900",rent:"~$5,150–5,440",av:"flexible (Jul 1 quote seen)",link:"https://www.apartments.com/160-brannan-st-san-francisco-ca-unit-fl2-id322/wj51ysh/"},
+   {u:"Unfurnished 2BR",bb:"2/2",sf:"~840",rent:"~$3,970–4,440",av:"not confirmed live — call",link:"https://www.corporatehousing.com/ca/san-francisco/160-brannan-st/9j51ss4"}
+  ],
+  contact:{phone:"via leasing/Blueground",email:"—",site:"https://www.corporatehousing.com/ca/san-francisco/160-brannan-st/9j51ss4",apply:"#"},
+  externalities:[
+   {f:"Oracle Park (~81 game nights + concerts)",s:"high",n:"~0.3–0.5 mi; crowds, traffic, roar, fireworks"},
+   {f:"Bay Bridge / I-80 noise+air",s:"med",n:"~0.4–0.7 mi N; upper north units"},
+   {f:"Flood / sea-level rise",s:"med",n:"low daily now, high long-term; king-tide nuisance on Embarcadero"},
+   {f:"Property crime toward Folsom/Bryant",s:"med",n:"safer on the waterfront core"}
+  ],
+  facing:{best:"High floor, bay-facing (east) — avoid north and the ballpark side",sides:[
+   {dir:"E",what:"Bay / Embarcadero — best views, quietest, water buffer",s:"low"},
+   {dir:"N",what:"Bay Bridge / I-80 (~0.4–0.7 mi): freeway noise + air on upper north units",s:"med"},
+   {dir:"S / SW",what:"Toward Oracle Park (~0.3–0.5 mi): game-night roar, fireworks, crowds",s:"high"}
+  ]},
+  commute:{station:"4th & King Caltrain",best:"Walk — ~8–10 min, flat waterfront, free",
+   caltrainLeg:"4th & King → Redwood City: 2 zones, ~33–40 min (express ~30), peak trains every ~15–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–70 min door-to-door — best express access (Baby Bullet starts at 4th & King)",
+   options:[
+    {mode:"🚶 Walk",time:"~8–10 min",cost:"free",freq:"—",route:"Brannan / Embarcadero → 4th & King depot",notes:"Flat waterfront walk."},
+    {mode:"🚊 N-Judah / T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"Embarcadero/Brannan → 4th & King",notes:"Handy in rain; depot is the train hub."}
+   ],
+   rushTip:"4th & King is the terminus, so you get the most peak departures and the Baby Bullet expresses. Leave ~8:15, walk 9 min, grab an express. ~55 min to the office."},
+  sound:"~2004 mid-rise, big amenity complex (pools/spas/2 gyms). Pick high, bay-facing, non-north unit for noise. Furnished = Blueground.",
+  amenities:{coffee:["Embarcadero cafés","Ferry Building (15 min)"],grocery:["Safeway (298 King St)","Whole Foods (4th & Harrison)"],transit:["4th&King Caltrain (8–10 min)","N-Judah / T-Third","Embarcadero BART (12–15 min)"],gym:"2 gyms, multiple pools/spas"},
+  reviews:[],
+  complaints:["Giants game-night crowds/traffic","Freeway background noise","Furnished premium over unfurnished"]
+ },
+ {
+  id:"strata", name:"Strata at Mission Bay", hood:"Mission Bay", address:"1201 4th St, 94158",
+  lat:37.7717, lng:-122.3925, year:"~2014", modern:"yes", avail:"no",
+  rentBand:"2BR ~$5,300–6,100 (when open)", each:"~$2,800 ea", caltrain:"~10–20 min walk / 1 Muni stop to 4th&King ★★★", parking:"~$531/mo",
+  verdict:"Modern + safe + transit-rich, but NO 2BR live now (1BRs only) and a real long-term flood/liquefaction caveat.",
+  units:[
+   {u:"1BR #511",bb:"1/1",sf:"650",rent:"~$4,830",av:"Aug 1 (1BR)",link:"https://www.stratasf.com/floorplans"},
+   {u:"2BR (any)",bb:"2/2",sf:"1,113–1,250",rent:"~$5,300–6,100",av:"none now — join alert",link:"https://www.stratasf.com/floorplans"}
+  ],
+  contact:{phone:"(415) 431-1800",email:"—",site:"https://www.stratasf.com/",apply:"https://www.stratasf.com/floorplans"},
+  externalities:[
+   {f:"Flood / liquefaction (long-term)",s:"high",n:"reclaimed bayfill on Mission Creek; ~52in flood by 2050 modeled"},
+   {f:"I-280 drone",s:"med",n:"~0.2–0.3 mi W; west/upper units"},
+   {f:"T-Third light rail out front",s:"med",n:"on 4th St; front units"},
+   {f:"Chase Center event traffic",s:"med",n:"~0.7 mi S"}
+  ],
+  facing:{best:"East / courtyard, upper floor — away from I-280 (W) and the T-Third on 4th St",sides:[
+   {dir:"W",what:"I-280 (~0.2–0.3 mi): freeway drone on west/upper units",s:"med"},
+   {dir:"Front / 4th St",what:"T-Third light rail out front: bells + daytime traffic",s:"med"},
+   {dir:"E / courtyard",what:"Mission Creek / interior — quietest, but note long-term flood/SLR",s:"low"}
+  ]},
+  commute:{station:"4th & King Caltrain",best:"T-Third 1 stop, or ~12–15 min walk",
+   caltrainLeg:"4th & King → Redwood City: 2 zones, ~33–40 min (express ~30), peak trains every ~15–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~60–70 min door-to-door",
+   options:[
+    {mode:"🚊 T-Third (1 stop)",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"4th St out front → 4th & King",notes:"Light rail stops at the door; one stop to the depot."},
+    {mode:"🚶 Walk",time:"~12–15 min",cost:"free",freq:"—",route:"4th St N to King St depot",notes:"Flat, easy."}
+   ],
+   rushTip:"Hop the T one stop or walk ~13 min; at 4th & King you catch frequent peak + express trains. ~62 min to the office."},
+  sound:"~2014 build. East/courtyard upper unit recommended. Long-term: weigh SLR/seismic if staying many years.",
+  amenities:{coffee:["Mission Bay cafés","Spark Social"],grocery:["Safeway (4th St)","Gus's Community Market"],transit:["4th&King Caltrain","T-Third out front"],gym:"In-building"},
+  reviews:[],
+  complaints:["No 2BR availability currently","Flood/liquefaction long-term risk","Parking expensive (~$531)"]
+ },
+ {
+  id:"avalon", name:"Avalon Dogpatch", hood:"Dogpatch", address:"800 Indiana St, 94107",
+  lat:37.7586, lng:-122.3915, year:"~2017 (AvalonBay)", modern:"yes (luxury)", avail:"warn",
+  rentBand:"2BR from ~$6,695 (to ~$7,390)", each:"~$3,350 ea", caltrain:"22nd St ~6–8 min walk ★★★", parking:"~$270/mo reserved garage (verify)",
+  verdict:"Top-tier amenities + purpose-built I-280 sound buffer, but luxury-tier (~2x your budget floor) and renter reviews flag maintenance/noise. Tour before committing.",
+  units:[
+   {u:"2BR/2BA floorplans",bb:"2/2",sf:"~1,000–1,200",rent:"~$6,695–7,390",av:"call to confirm Aug window",link:"https://www.avaloncommunities.com/california/san-francisco-apartments/avalon-dogpatch/"},
+   {u:"#FL2-ID220 (listed)",bb:"2/2",sf:"inquire",rent:"inquire",av:"listed — call to confirm",link:"https://www.apartments.com/800-indiana-st-san-francisco-ca-unit-fl2-id220/6wkvcbv/"}
+  ],
+  contact:{phone:"(415) 936-8447",email:"—",site:"https://www.avaloncommunities.com/california/san-francisco-apartments/avalon-dogpatch/",apply:"https://www.avaloncommunities.com/california/san-francisco-apartments/avalon-dogpatch/"},
+  externalities:[
+   {f:"I-280 noise + air",s:"high",n:"~1 blk W (elevated viaduct); building was sited as an acoustic buffer — get an east/courtyard unit"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; use the secured below-grade garage"},
+   {f:"Interior / maintenance noise",s:"med",n:"renter reviews + a tenant dossier cite exhaust-fan noise and slow repairs — vet the specific unit"},
+   {f:"Chase Center event nights",s:"med",n:"~0.8 mi N; ~100 nights/yr traffic + crowds"},
+   {f:"Caltrain/freight + T-Third",s:"low",n:"~0.2–0.4 mi E; some night freight, T-Third bells"}
+  ],
+  facing:{best:"East / interior courtyard — away from I-280 on the west",sides:[
+   {dir:"W",what:"I-280 elevated viaduct (~1 blk): the building is the noise buffer — west units take the hit",s:"high"},
+   {dir:"E",what:"Tennessee St + T-Third/freight (~0.2–0.4 mi): mild transit hum",s:"med"},
+   {dir:"Interior courtyard",what:"Podium courtyard — quietest, best escape from the freeway",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk — ~6–8 min, flat, free",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~6–8 min",cost:"free",freq:"—",route:"Indiana St → 22nd St to the platform",notes:"Quick, flat."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"Indiana/20th → 22nd St / Pennsylvania",notes:"Marginal vs walking on this hop."}
+   ],
+   rushTip:"Leave ~8:20am, ~7-min walk, make the ~8:35 southbound. ~60 min to the office."},
+  sound:"~2017 AvalonBay build — 3 wood-framed 5-story buildings over a shared garage, purpose-built as an I-280 acoustic buffer. Request an east/courtyard unit away from the freeway. Reviews flag in-unit exhaust-fan and neighbor noise — inspect in person.",
+  amenities:{coffee:["The Daily Driver","Farley's","Dogpatch breweries (Harmonic, Triple Voodoo)"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~6–8 min)","T-Third (3rd St)","Mariposa Muni ~0.5 mi"],gym:"Fitness center w/ yoga studio + Fitness on Demand; roof decks, WAG pet spa, bike storage"},
+  reviews:[
+   {src:"ApartmentRatings",rating:"1★ maint/noise/safety",quote:"Renters rate maintenance, noise, and safety 1/5; neighborhood 5/5.",url:"https://www.apartmentratings.com/ca/san-francisco/avalon-dogpatch_9199332346275184019/"},
+   {src:"Tenant dossier",rating:"—",quote:"Resident-run site documents unresolved exhaust-fan noise and patch-job repairs.",url:"https://avalondogpatchtenants.org/"},
+   {src:"Yelp",rating:"34 reviews",quote:"Praise for gym/roof deck/pet spa; mixed on management.",url:"https://www.yelp.com/biz/avalon-dogpatch-san-francisco"}
+  ],
+  complaints:["I-280 freeway noise/air on west units","Maintenance responsiveness (renter reviews)","Interior exhaust-fan/neighbor noise (tenant dossier)","Luxury pricing ~2x budget floor","Car break-ins (Dogpatch area)"]
+ },
+ {
+  id:"potrero1010", name:"Potrero 1010", hood:"Potrero Hill", address:"1010 16th St, 94107",
+  lat:37.7663, lng:-122.3958, year:"2016 (Equity)", modern:"yes", avail:"yes",
+  rentBand:"2BR from ~$5,672 (studio $3,580 / 1BR $4,122)", each:"~$2,840 ea", caltrain:"22nd St ~12–15 min walk / bus ★★", parking:"garage (ask; ~$300+)",
+  verdict:"Big professionally-run Equity community with real, frequently-updated availability and an acre of green between the two buildings. Cheaper entry than the Dogpatch towers, and much cheaper studios/1BRs.",
+  units:[
+   {u:"2BR/2BA (10+ units live)",bb:"2/2",sf:"~1,000–1,150",rent:"~$5,672–5,978",av:"multiple live — confirm Aug window",link:"https://www.equityapartments.com/san-francisco/potrero-hill/potrero-1010-apartments"},
+   {u:"Studio / 1BR (cheaper)",bb:"0–1/1",sf:"~500–750",rent:"~$3,580–4,122",av:"live",link:"https://www.apartments.com/potrero-1010-san-francisco-ca/c9cjr5f/"}
+  ],
+  contact:{phone:"(628) 629-6940",email:"—",site:"https://www.equityapartments.com/san-francisco/potrero-hill/potrero-1010-apartments",apply:"https://www.equityapartments.com/san-francisco/potrero-hill/potrero-1010-apartments"},
+  externalities:[
+   {f:"I-280 noise + air",s:"high",n:"adjacent to the west; pick a park/east-facing unit, not the freeway side"},
+   {f:"Design District / industrial edge",s:"med",n:"industrial blocks to the N/W; quieter than it looks by day, dead-ish at night"},
+   {f:"Car break-ins",s:"med",n:"use the garage; standard SF property-crime caution"},
+   {f:"Caltrain (~0.5–0.7 mi)",s:"low",n:"22nd St is a walk/bus, not adjacent — longer commute hop than Dogpatch"}
+  ],
+  facing:{best:"East / park-facing — away from I-280 on the west",sides:[
+   {dir:"W",what:"I-280 freeway (adjacent): noise + air — the side to avoid",s:"high"},
+   {dir:"E / park",what:"The one-acre green between the two buildings — quietest, best light",s:"low"},
+   {dir:"N",what:"Design District / industrial blocks: some daytime truck activity",s:"med"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~12–15 min, or Muni 55 one-seat in bad weather",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~65–75 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~12–15 min",cost:"free",freq:"—",route:"16th St / Mississippi → Pennsylvania to 22nd St",notes:"Flat; longer than the Dogpatch buildings."},
+    {mode:"🚌 Muni 22-Fillmore",time:"~6 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 10–15 min",route:"16th St out front E toward Mission Bay (transfer)",notes:"Frequent, but heads to Mission Bay — not 22nd St directly."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~8 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"16th/Connecticut → 22nd St / Pennsylvania",notes:"One-seat to the station area."}
+   ],
+   rushTip:"Walk ~13 min to 22nd St, or take the 55 in bad weather. Leave ~8:05 to make a ~8:25–8:40 southbound. ~68 min to the office."},
+  sound:"2016 Equity build, 453 units across two buildings. The west side faces I-280 — request a unit over the central park or east-facing. Big managed building; watch for concessions that drop effective rent.",
+  amenities:{coffee:["Farley's","Design District cafés"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (16th St)"],transit:["22nd St Caltrain (walk/bus)","22/55 bus","I-280 on-ramp adjacent"],gym:"Fitness center, rooftop deck, pet grooming, resident lounge"},
+  reviews:[{src:"Equity / aggregators",rating:"—",quote:"10+ units live, prices re-verified frequently; pet-friendly (up to 3 pets).",url:"https://www.apartments.com/potrero-1010-san-francisco-ca/c9cjr5f/"}],
+  complaints:["I-280 freeway noise/air on west units","22nd St Caltrain is a walk/bus, not steps","Large-complex management variability"]
+ },
+ {
+  id:"brickiron", name:"Brick + Iron Lofts", hood:"Dogpatch", address:"2235 3rd St, 94107",
+  lat:37.7610, lng:-122.3880, year:"2012", modern:"yes (loft)", avail:"warn",
+  rentBand:"2BR ~$5,350–5,921 (1BR from ~$4,464)", each:"~$2,820 ea", caltrain:"22nd St ~5–7 min walk ★★★", parking:"garage ~$325/mo",
+  verdict:"Loft character — high ceilings, big windows — right on 3rd St, across from Crane Cove Park + the waterfront. Lower entry than the glass towers; tour for the 3rd-St/T-Third noise.",
+  units:[
+   {u:"2BR lofts",bb:"2/2–2.5",sf:"~950–1,130",rent:"~$5,350–5,921",av:"call to confirm Aug window",link:"https://www.apartments.com/brick-iron-lofts-at-dogpatch-san-francisco-ca/h9qg9h3/"},
+   {u:"1BR lofts (cheaper)",bb:"1/1",sf:"~600–800",rent:"from ~$4,464",av:"live",link:"https://www.brickandironlofts.com/"}
+  ],
+  contact:{phone:"(415) 626-3100",email:"—",site:"https://www.brickandironlofts.com/",apply:"https://www.brickandironlofts.com/"},
+  externalities:[
+   {f:"3rd St + T-Third light rail",s:"med",n:"on 3rd St out front: bells/squeal + daytime traffic on west units"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; use the garage"},
+   {f:"Caltrain/freight (~0.3 mi W)",s:"low",n:"some night freight; not adjacent"},
+   {f:"Crane Cove Park across street",s:"low",n:"net positive — green/waterfront, but summer weekend crowds"}
+  ],
+  facing:{best:"East — toward Crane Cove Park / the bay, away from 3rd St",sides:[
+   {dir:"W / 3rd St",what:"T-Third light rail + traffic out front: the loud side",s:"med"},
+   {dir:"E",what:"Crane Cove Park + waterfront — quietest, best views",s:"low"},
+   {dir:"N / S",what:"Side streets — calm, industrial-quiet at night",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5–7 min, or T-Third from the door",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5–7 min",cost:"free",freq:"—",route:"3rd St → 22nd St underpass to the platform",notes:"Quick flat walk."},
+    {mode:"🚊 T-Third (out front)",time:"~4 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express trains",notes:"Light rail at the door — also a one-seat to 4th & King."}
+   ],
+   rushTip:"Walk ~6 min to 22nd St for a southbound, or ride the T to 4th & King for express trains. ~58 min to the office."},
+  sound:"2012 loft-style build, 196 units, 4 stories. High ceilings + big windows look great but loft volumes carry sound — front (3rd St) units get the T-Third. Ask for an east/park-facing loft.",
+  amenities:{coffee:["The Daily Driver","Dogpatch breweries"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (~5–7 min)","T-Third out front","Crane Cove Park / waterfront"],gym:"Fitness center, rooftop lounge + dog run, demo-kitchen clubroom"},
+  reviews:[{src:"ApartmentRatings (100 reviews)",rating:"mixed",quote:"Loft character + park location praised; large building — vet the specific unit.",url:"https://www.apartmentratings.com/ca/san-francisco/brick-+-iron-lofts-at-dogpatch_9199332346275143660/"}],
+  complaints:["T-Third/3rd St noise on front units","Parking is paid (~$325)","Loft acoustics carry sound between spaces"]
+ },
+ {
+  id:"onehenry", name:"One Henry Adams", hood:"Potrero Hill", address:"1 Henry Adams St, 94103 (Design District)",
+  lat:37.7682, lng:-122.4030, year:"2017 (Equity)", modern:"yes", avail:"yes",
+  rentBand:"2BR from ~$5,650 (1BR ~$4,302 / studio $3,350)", each:"~$2,825 ea", caltrain:"22nd St ~15 min walk / bus ★★", parking:"$275/mo (SUV $325)",
+  verdict:"2017 Equity build with a pool + rooftop in the Design District, walk score in the 90s. Entry 2BR a notch under the Dogpatch towers; Caltrain is a bus/longer walk.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~1,000–1,200",rent:"from ~$5,650",av:"live — confirm Aug window",link:"https://www.equityapartments.com/san-francisco/design-district/one-henry-adams-apartments"},
+   {u:"Studio / 1BR (cheaper)",bb:"0–1/1",sf:"~500–750",rent:"~$3,350–4,302",av:"live",link:"https://www.zumper.com/apartment-buildings/p208324/one-henry-adams-potrero-hill-san-francisco-ca"}
+  ],
+  contact:{phone:"via Equity site",email:"—",site:"https://www.equityapartments.com/san-francisco/design-district/one-henry-adams-apartments",apply:"https://www.equityapartments.com/san-francisco/design-district/one-henry-adams-apartments"},
+  externalities:[
+   {f:"Hwy-101 / Division St corridor",s:"med",n:"elevated 101 + Division to the N; traffic hum on upper north units"},
+   {f:"Design District industrial blocks",s:"med",n:"quiet nights but dead-ish; fewer people out late"},
+   {f:"Car break-ins",s:"med",n:"use the garage; standard caution near the freeway edge"},
+   {f:"Caltrain (~0.6 mi)",s:"low",n:"22nd St or 4th&King is a walk/bus — longer commute hop"}
+  ],
+  facing:{best:"Into the central mews / south — away from the 101/Division corridor (north)",sides:[
+   {dir:"N",what:"Hwy-101 + Division St: traffic hum on upper north units",s:"med"},
+   {dir:"Mews / interior",what:"Landscaped pedestrian mews between the two buildings — quietest",s:"low"},
+   {dir:"S / E",what:"Design District streets — calm, low-rise light",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Muni 19/55 or ~15-min walk — station isn't adjacent",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~65–80 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~15 min",cost:"free",freq:"—",route:"16th St E → Pennsylvania to 22nd St",notes:"Flat but the longest walk of the Potrero/Dogpatch set."},
+    {mode:"🚌 Muni 55-Dogpatch",time:"~12 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 15–20 min",route:"16th St → 22nd St / Pennsylvania",notes:"One-seat to the station."},
+    {mode:"🚌 Muni 19-Polk",time:"~10 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 12–20 min",route:"7th/16th area → toward Dogpatch",notes:"Less frequent — check live times."}
+   ],
+   rushTip:"Plan ~15 min on foot or a 55 ride to 22nd St. Walking ~15 min to 4th & King for express trains is also viable. ~70 min to the office."},
+  sound:"2017 Equity build (239 units, two buildings on a former rail yard). North side faces the 101/Division corridor; ask for a mews-facing or south unit. Pool + rooftop terrace.",
+  amenities:{coffee:["Design District cafés","Sightglass (SoMa, ~10 min)"],grocery:["Whole Foods (17th & Rhode Island)","Trader Joe's (4th St)"],transit:["22nd St / 4th&King (walk/bus)","19/22/55 bus","I-280 + 101 nearby"],gym:"24h fitness, pool, rooftop terrace, clubhouse"},
+  reviews:[{src:"Zumper / Equity",rating:"—",quote:"2BR ~10% above Potrero Hill avg; pool + high walk score are the draws.",url:"https://www.zumper.com/apartment-buildings/p208324/one-henry-adams-potrero-hill-san-francisco-ca"}],
+  complaints:["Caltrain is a bus/longer walk, not adjacent","2BR runs ~10% above neighborhood avg","101/Division noise on north units","Design District quiet at night"]
+ },
+ {
+  id:"venue", name:"Venue", hood:"Mission Bay", address:"1155 4th St, 94158",
+  lat:37.7725, lng:-122.3928, year:"2014 (Sares Regis)", modern:"yes", avail:"yes",
+  rentBand:"2BR ~$6,000–7,327 (from ~$5,320 all types)", each:"~$3,300 ea", caltrain:"4th & King ~10–12 min walk / T-Third ★★★", parking:"garage + EV charging (ask; ~$300+)",
+  verdict:"Mid-size 2014 green building with big 2BRs (up to 1,080 sf), concierge, and strong Mission Bay transit. Pricey but well-run; the largest 2BR layouts are the draw.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~900–1,080",rent:"~$6,000–7,327",av:"call to confirm Aug window",link:"https://www.apartments.com/venue-apartments-san-francisco-ca/5exl7nq/"},
+   {u:"Studio / 1BR (cheaper)",bb:"0–1/1",sf:"~552–800",rent:"from ~$5,320",av:"live",link:"https://www.venuesf.com/"}
+  ],
+  contact:{phone:"(415) 701-8600",email:"—",site:"https://www.venuesf.com/",apply:"https://www.venuesf.com/"},
+  externalities:[
+   {f:"Oracle Park game nights",s:"med",n:"~0.5–0.7 mi N; crowds + packed 4th&King trains on ~81 evenings"},
+   {f:"Chase Center event nights",s:"med",n:"~0.4 mi S; ~100 nights/yr traffic + crowds"},
+   {f:"I-280 / T-Third",s:"med",n:"I-280 ~0.2 mi W drone; T-Third on 4th St out front"},
+   {f:"Flood / liquefaction (long-term)",s:"low",n:"reclaimed Mission Bay bayfill; long-term, not daily"}
+  ],
+  facing:{best:"East / courtyard — away from I-280 (W) and the 4th St rail",sides:[
+   {dir:"W",what:"I-280 (~0.2 mi) + 4th St T-Third: freeway drone + rail",s:"med"},
+   {dir:"E / courtyard",what:"Interior courtyard / Mission Bay blocks — quietest",s:"low"},
+   {dir:"N",what:"Toward Oracle Park / Mission Creek — game-night crowds",s:"med"}
+  ]},
+  commute:{station:"4th & King Caltrain",best:"Walk ~10–12 min, or T-Third 1–2 stops",
+   caltrainLeg:"4th & King → Redwood City: 2 zones, ~33–40 min (express ~30), peak trains every ~15–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~60–70 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~10–12 min",cost:"free",freq:"—",route:"4th St N to King St depot",notes:"Flat Mission Bay walk."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"4th St out front → 4th & King",notes:"Light rail at the door."}
+   ],
+   rushTip:"Walk ~11 min or ride the T to 4th & King for frequent peak + express trains. Coming home on Giants nights the 4th&King side is crowded. ~62 min to the office."},
+  sound:"2014 Sares Regis green build, 147 units, 6 stories. Double-pane windows + high ceilings. West/4th-St side gets I-280 + T-Third; ask for an east/courtyard unit.",
+  amenities:{coffee:["Mission Bay cafés","Spark Social"],grocery:["Safeway (4th St)","Gus's Community Market"],transit:["4th & King Caltrain","T-Third out front","I-280 nearby"],gym:"24h gym, concierge, clubhouse, courtyard, fire pit"},
+  reviews:[{src:"Yelp (65 reviews)",rating:"—",quote:"Big units + concierge praised; very walkable Mission Bay (walk score 88).",url:"https://www.yelp.com/biz/venue-apartments-san-francisco-2"}],
+  complaints:["Giants + Chase event-night crowds","I-280/T-Third noise on west units","Premium pricing for the larger 2BRs"]
+ },
+ {
+  id:"channel", name:"Channel Mission Bay", hood:"Mission Bay", address:"185 Channel St, 94158",
+  lat:37.7706, lng:-122.3912, year:"~2014 (UDR)", modern:"yes (amenity-heavy)", avail:"yes",
+  rentBand:"2BR ~$6,164 (range $3,861–7,271 all types)", each:"~$3,080 ea", caltrain:"4th & King ~8–10 min walk / T-Third ★★★", parking:"⚠️ waitlist; $305–430/mo when open",
+  verdict:"Big UDR amenity complex (pool, 3-level gym) steps from Oracle Park + Chase Center. Live 2BRs, but parking is waitlisted — a real catch if you're bringing a car.",
+  units:[
+   {u:"#207 (B2I)",bb:"2/2",sf:"1,041",rent:"~$6,164",av:"avail 3/28/2026 — ask for Aug",link:"https://www.udr.com/san-francisco-bay-area-apartments/san-francisco/channel-mission-bay/apartments-pricing/"},
+   {u:"2BR (other)",bb:"2/2",sf:"~1,000–1,436",rent:"~$6,000–7,271",av:"call to confirm window",link:"https://www.apartments.com/channel-mission-bay-san-francisco-ca/7l08vty/"}
+  ],
+  contact:{phone:"via UDR site",email:"—",site:"https://www.udr.com/san-francisco-bay-area-apartments/san-francisco/channel-mission-bay/",apply:"https://www.udr.com/san-francisco-bay-area-apartments/san-francisco/channel-mission-bay/"},
+  externalities:[
+   {f:"Oracle Park game nights",s:"high",n:"~0.4 mi N; crowds, traffic, packed 4th&King trains on ~81 evenings"},
+   {f:"Chase Center event nights",s:"med",n:"~0.4 mi S; ~100 nights/yr"},
+   {f:"Parking shortage",s:"high",n:"garage waitlisted; a floor was sold to hourly — confirm a spot before signing"},
+   {f:"Flood / liquefaction (long-term)",s:"med",n:"on Mission Creek bayfill; long-term SLR risk"}
+  ],
+  facing:{best:"Courtyard / south — away from Channel St + the ballpark crowd (N)",sides:[
+   {dir:"N",what:"Channel St / Mission Creek toward Oracle Park: game-night crowds",s:"med"},
+   {dir:"Courtyard",what:"Two interior courtyards / pool deck — quietest",s:"low"},
+   {dir:"S",what:"Toward Chase Center — event nights, calmer daily",s:"med"}
+  ]},
+  commute:{station:"4th & King Caltrain",best:"Walk ~8–10 min, or T-Third 1 stop",
+   caltrainLeg:"4th & King → Redwood City: 2 zones, ~33–40 min (express ~30), peak trains every ~15–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~58–68 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~8–10 min",cost:"free",freq:"—",route:"Channel St → 4th St to King St depot",notes:"Flat; passes Mission Creek."},
+    {mode:"🚊 T-Third",time:"~5 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"4th St → 4th & King",notes:"One stop to the depot."}
+   ],
+   rushTip:"Walk ~9 min to 4th & King for express trains. On Giants nights expect crowds at your door + a packed station coming home. ~60 min to the office."},
+  sound:"~2014 UDR build, 52 units, amenity-heavy (pool, 3-level gym, two courtyards). In-unit W/D. Quietest = courtyard/pool-facing; the Channel-St side catches ballpark crowds.",
+  amenities:{coffee:["Mission Bay cafés","Philz (Berry St)"],grocery:["Safeway (4th St)","Gus's Community Market"],transit:["4th & King Caltrain","T-Third","Mission Bay ferry"],gym:"3-level fitness, pool, two courtyards, co-working lounge"},
+  reviews:[{src:"Resident reviews (UDR)",rating:"mixed",quote:"Pool + amenities praised; parking sold-off + waitlist is the recurring complaint.",url:"https://www.apartments.com/channel-mission-bay-san-francisco-ca/7l08vty/"}],
+  complaints:["Parking waitlist / sold-off garage floor","Giants + Chase event-night crowds","Flood/liquefaction long-term"]
+ },
+ {
+  id:"martin", name:"The Martin", hood:"Dogpatch", address:"2290 3rd St, 94107",
+  lat:37.7600, lng:-122.3874, year:"~2017 (DM Development)", modern:"yes (boutique luxury)", avail:"warn",
+  rentBand:"2BR ~$5,983–6,355", each:"~$3,170 ea", caltrain:"22nd St ~2 blks / T-Third out front ★★★", parking:"stacker $350 / garage $450 / tandem $900",
+  verdict:"Boutique 71-unit luxury build — 12-ft ceilings, Miele/Arclinea finishes, bay-view roof deck. Best 'design-forward' pick on 3rd St; small building, automated stacker parking.",
+  units:[
+   {u:"2BR/2BA",bb:"2/2",sf:"~950–1,150",rent:"~$5,983–6,355",av:"call to confirm Aug window",link:"https://www.themartinsf.com/"},
+   {u:"Live/work + 1BR",bb:"1/1",sf:"~600–850",rent:"inquire",av:"limited (71 units total)",link:"https://www.themartinsf.com/brochure"}
+  ],
+  contact:{phone:"via Greystar/site",email:"—",site:"https://www.themartinsf.com/",apply:"https://www.themartinsf.com/"},
+  externalities:[
+   {f:"3rd St + T-Third light rail",s:"med",n:"out front: bells/squeal + daytime traffic on west units"},
+   {f:"Car break-ins",s:"med",n:"Dogpatch vehicle larceny; automated garage helps"},
+   {f:"Caltrain/freight (~0.3 mi W)",s:"low",n:"some night freight; not adjacent"},
+   {f:"Stacker parking",s:"low",n:"automated German stacker — convenient but slower in/out at peak"}
+  ],
+  facing:{best:"East — bay side, away from 3rd St (W)",sides:[
+   {dir:"W / 3rd St",what:"T-Third light rail + traffic out front: the loud side",s:"med"},
+   {dir:"E",what:"Toward the bay / Dogpatch interior — quieter, roof-deck views",s:"low"},
+   {dir:"N / S",what:"Side streets — calm, industrial-quiet at night",s:"low"}
+  ]},
+  commute:{station:"22nd St Caltrain",best:"Walk ~5 min, or T-Third from the door",
+   caltrainLeg:"22nd St → Redwood City: 2 zones, ~37 min local, peak trains every ~20–30 min; ~$5.50 (verify 2026 chart)",
+   doorToOffice:"~55–65 min door-to-door to 500 Arguello St",
+   options:[
+    {mode:"🚶 Walk",time:"~5 min",cost:"free",freq:"—",route:"3rd St → 22nd St (2 blocks) to the platform",notes:"Two blocks to the station."},
+    {mode:"🚊 T-Third (out front)",time:"~4 min + wait",cost:"$2.85 Clipper / $3 cash",freq:"~every 8–12 min",route:"3rd St → 4th & King for express trains",notes:"Light rail at the door; one-seat to 4th & King too."}
+   ],
+   rushTip:"Walk ~5 min to 22nd St for a southbound, or ride the T to 4th & King for express trains. ~58 min to the office."},
+  sound:"~2017 DM Development boutique build, 71 units, 6 stories, 12-ft ceilings + Miele W/D. 3rd-St side gets the T-Third; ask for an east/bay-facing unit. Roof deck w/ fire pit + dog run.",
+  amenities:{coffee:["The Daily Driver","Dogpatch breweries"],grocery:["Whole Foods (17th & Rhode Island)","Safeway (Mission Bay)"],transit:["22nd St Caltrain (2 blks)","T-Third out front","Crane Cove Park nearby"],gym:"Fitness center, bay-view roof deck w/ fire pit + dog run, bike elevator"},
+  reviews:[{src:"Greystar / listings",rating:"—",quote:"High-end finishes (Arclinea, Miele, 12-ft ceilings) + roof deck are the draw; small building.",url:"https://www.greystar.com/properties/san-francisco-ca/the-martin-apartments"}],
+  complaints:["T-Third/3rd St noise on west units","Parking is paid + stacker (slower in/out)","Boutique pricing; many monthly add-on fees"]
+ }
+];
+
+const HOODS = ["All","Hayes Valley","Mission Bay","Dogpatch","Potrero Hill","Mission"];
+let filter="All", selId=null, markers={}, curD=null, routeLayers=[], stationMarker=null, lastOpt=0;
+
+// chips
+const chips=document.getElementById('chips');
+HOODS.forEach(h=>{const b=document.createElement('div');b.className='chip'+(h==='All'?' active':'');b.textContent=h;b.onclick=()=>{filter=h;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.textContent===h));renderList();};chips.appendChild(b);});
+
+// map
+const map=L.map('map').setView([37.766,-122.40],13);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19}).addTo(map);
+DATA.forEach(d=>{
+  const col=d.avail==='yes'?'#3fb950':(d.avail==='warn'?'#d29922':'#f85149');
+  const m=L.circleMarker([d.lat,d.lng],{radius:9,color:'#0f1419',weight:2,fillColor:col,fillOpacity:.95}).addTo(map);
+  m.bindTooltip(d.name,{direction:'top'});
+  m.on('click',()=>select(d.id));
+  markers[d.id]=m;
+});
+
+// Caltrain station coordinates for route drawing
+const STATIONS={
+ "22nd St Caltrain":[37.7573,-122.3922],
+ "22nd St Caltrain (transfer)":[37.7573,-122.3922],
+ "4th & King Caltrain":[37.7766,-122.3947]
+};
+// Permanent Caltrain station markers (SF + next stop south)
+const CALTRAIN=[
+ {name:"🚉 4th & King (San Francisco)",lat:37.7766,lng:-122.3947},
+ {name:"🚉 22nd Street",lat:37.7573,lng:-122.3922},
+ {name:"🚉 Bayshore",lat:37.7095,lng:-122.4012}
+];
+const trainIcon=L.divIcon({className:'train-ic',html:'🚉',iconSize:[24,24],iconAnchor:[12,12]});
+CALTRAIN.forEach(s=>{
+ L.marker([s.lat,s.lng],{icon:trainIcon,zIndexOffset:1000}).addTo(map)
+  .bindTooltip(s.name.replace('🚉 ',''),{permanent:true,direction:'right',className:'st-tt',offset:[10,0]});
+});
+function modeColor(mode){if(mode.includes('🚶'))return '#3fb950';if(mode.includes('🚲'))return '#d29922';if(mode.includes('🚊'))return '#bc8cff';return '#4ea1ff';}
+function clearRoutes(){routeLayers.forEach(l=>map.removeLayer(l));routeLayers=[];if(stationMarker){map.removeLayer(stationMarker);stationMarker=null;}}
+async function drawRoute(from,to,color,dash){
+  let coords=null;
+  try{
+    const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`);
+    const j=await r.json();
+    if(j.routes&&j.routes[0])coords=j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+  }catch(e){}
+  if(!coords)coords=[from,to];
+  // casing under the colored line for contrast on the dark map
+  routeLayers.push(L.polyline(coords,{color:'#0b0f14',weight:8,opacity:.7}).addTo(map));
+  routeLayers.push(L.polyline(coords,{color,weight:5,opacity:.95,dashArray:dash?'9,7':null}).addTo(map));
+  return coords;
+}
+async function drawCommute(d,optIndex){
+  if(!d.commute)return;
+  const st=STATIONS[d.commute.station];if(!st)return;
+  lastOpt=optIndex;
+  clearRoutes();
+  const o=d.commute.options[optIndex]||d.commute.options[0];
+  const dashed=o.mode.includes('🚌')||o.mode.includes('🚊');
+  const coords=await drawRoute([d.lat,d.lng],st,modeColor(o.mode),dashed);
+  const b=L.latLngBounds(coords.concat([[d.lat,d.lng],st]));
+  map.fitBounds(b.pad(0.3));
+  document.querySelectorAll('.cmt-row').forEach((r,i)=>r.classList.toggle('active',i===optIndex));
+}
+function highlightRoute(i){if(curD)drawCommute(curD,i);}
+
+function availBadge(a){return a==='yes'?'<span class="badge b-yes">2BR available</span>':a==='warn'?'<span class="badge b-warn">furnished/call</span>':'<span class="badge b-no">no 2BR now</span>';}
+
+function renderList(){
+  const list=document.getElementById('list');list.innerHTML='';
+  DATA.filter(d=>filter==='All'||d.hood===filter).forEach(d=>{
+    const c=document.createElement('div');c.className='card'+(d.id===selId?' sel':'');
+    c.innerHTML=`<div class="nm">${d.name}</div><div class="ad">${d.hood} · ${d.address}</div><div class="rb">${availBadge(d.avail)} ${d.rentBand}</div>`;
+    c.onclick=()=>select(d.id);list.appendChild(c);
+  });
+}
+
+function sev(s){return `<span class="sev-${s}">${s.toUpperCase()}</span>`;}
+
+function select(id){
+  selId=id;renderList();
+  const d=DATA.find(x=>x.id===id);curD=d;
+  if(markers[id]){map.setView([d.lat,d.lng],15);markers[id].openTooltip();}
+  const unitRows=d.units.map(u=>`<tr><td><b>${u.u}</b></td><td>${u.bb}</td><td>${u.sf} sf</td><td>${u.rent}</td><td>${u.av}</td><td><a class="btn" href="${u.link}" target="_blank">Open ↗</a></td></tr>`).join('');
+  const extRows=d.externalities.map(e=>`<tr><td>${e.f}</td><td>${sev(e.s)}</td><td>${e.n}</td></tr>`).join('');
+  const faceSec=d.facing?`<div class="sec"><h3>🧭 Which way to face</h3><div class="note"><b>Ask for:</b> ${d.facing.best}</div><table><tr><th>Side</th><th>Noise</th><th>What's immediately outside</th></tr>${d.facing.sides.map(f=>`<tr><td><b>${f.dir}</b></td><td>${sev(f.s)}</td><td>${f.what}</td></tr>`).join('')}</table></div>`:'';
+  const cmt=d.commute;
+  const commuteSec=cmt?`<div class="sec"><h3>🚆 Route to Caltrain — ${cmt.station}</h3>
+    <div class="note"><b>Best daily:</b> ${cmt.best} &nbsp;·&nbsp; 🗺️ <span style="color:var(--acc)">click a row to draw it on the map</span></div>
+    <table><tr><th>Mode</th><th>Time</th><th>Fare</th><th>Frequency</th><th>Route / notes</th></tr>${cmt.options.map((o,i)=>`<tr class="cmt-row" onclick="highlightRoute(${i})"><td><b>${o.mode}</b></td><td>${o.time}</td><td>${o.cost}</td><td>${o.freq}</td><td>${o.route}${o.notes?` — <span style="color:var(--mut)">${o.notes}</span>`:''}</td></tr>`).join('')}</table>
+    <div class="kv" style="margin-top:8px"><span class="k">Caltrain leg</span><span>${cmt.caltrainLeg}</span></div>
+    <div class="kv"><span class="k">Door→office</span><span>${cmt.doorToOffice}</span></div>
+    ${cmt.rushTip?`<div class="note">⏰ <b>Weekday rush:</b> ${cmt.rushTip}</div>`:''}
+  </div>`:'';
+  const revs=d.reviews.length?d.reviews.map(r=>`<tr><td>${r.src}</td><td>${r.rating||'—'}</td><td>${r.quote}</td><td><a href="${r.url}" target="_blank">link ↗</a></td></tr>`).join(''):`<tr><td colspan="4" class="empty">Resident reviews being scraped by the research fleet (Reddit / Yelp / ApartmentRatings / forums) — landing in the full app.</td></tr>`;
+  const amenPills=(arr)=>arr.map(a=>`<span class="pill">${a}</span>`).join('');
+  document.getElementById('detail').innerHTML=`
+    <h2>${d.name} ${availBadge(d.avail)}</h2>
+    <div class="addr">${d.hood} · ${d.address} · built ${d.year}</div>
+    <div><a class="btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address+' San Francisco')}" target="_blank">📍 Map</a>
+    <a class="btn ghost" href="${d.contact.site}" target="_blank">🏢 Building site</a>
+    <a class="btn ghost" href="${d.contact.apply}" target="_blank">📝 Apply</a></div>
+    <div class="note"><b>Verdict:</b> ${d.verdict}</div>
+    <div class="sec"><h3>Snapshot</h3>
+      <div class="kv"><span class="k">Rent</span><span>${d.rentBand} · ${d.each}</span></div>
+      <div class="kv"><span class="k">Caltrain</span><span>${d.caltrain}</span></div>
+      <div class="kv"><span class="k">Parking</span><span>${d.parking}</span></div>
+      <div class="kv"><span class="k">Modern</span><span>${d.modern}</span></div>
+      <div class="kv"><span class="k">Contact</span><span>${d.contact.phone}${d.contact.email!=='—'?' · '+d.contact.email:''}</span></div>
+    </div>
+    ${commuteSec}
+    <div class="sec"><h3>Available units &amp; tours</h3><table><tr><th>Unit</th><th>Bd/Ba</th><th>Size</th><th>Rent</th><th>Available</th><th></th></tr>${unitRows}</table></div>
+    <div class="sec"><h3>⚠️ Externalities</h3><table><tr><th>Factor</th><th>Severity</th><th>Day-to-day</th></tr>${extRows}</table></div>
+    ${faceSec}
+    <div class="sec"><h3>🔇 Construction / soundproofing</h3><p style="font-size:13px">${d.sound}</p></div>
+    <div class="sec"><h3>🏘️ Neighborhood</h3>
+      <div class="kv"><span class="k">Coffee</span><span>${amenPills(d.amenities.coffee)}</span></div>
+      <div class="kv"><span class="k">Grocery</span><span>${amenPills(d.amenities.grocery)}</span></div>
+      <div class="kv"><span class="k">Transit</span><span>${amenPills(d.amenities.transit)}</span></div>
+      <div class="kv"><span class="k">Gym</span><span>${d.amenities.gym}</span></div>
+    </div>
+    <div class="sec"><h3>💬 Resident reviews</h3><table><tr><th>Source</th><th>Rating</th><th>Quote</th><th></th></tr>${revs}</table></div>
+    <div class="sec"><h3>🚩 Main complaints</h3>${d.complaints.map(c=>`<span class="pill">${c}</span>`).join('')}</div>
+  `;
+  if(d.commute)drawCommute(d,0);
+}
+renderList();
+</script>
+</body>
+</html>
